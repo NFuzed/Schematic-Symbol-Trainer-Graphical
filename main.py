@@ -14,10 +14,14 @@
 #
 # ///////////////////////////////////////////////////////////////
 
+import sys
+import os
+import platform
+
 # IMPORT / GUI AND MODULES AND WIDGETS
 # ///////////////////////////////////////////////////////////////
 from modules import *
-
+from widgets import *
 os.environ["QT_FONT_DPI"] = "96" # FIX Problem for High DPI and Scale above 100%
 
 # SET AS GLOBAL WIDGETS
@@ -41,7 +45,7 @@ class MainWindow(QMainWindow):
 
         # APP NAME
         # ///////////////////////////////////////////////////////////////
-        title = "Schematic Symbol Trainer"
+        title = "PyDracula - Modern GUI"
         description = "PyDracula APP - Theme with colors based on Dracula for Python."
         # APPLY TEXTS
         self.setWindowTitle(title)
