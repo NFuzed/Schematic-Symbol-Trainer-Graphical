@@ -18,6 +18,7 @@ import sys
 import os
 import platform
 
+import buttonfunctions
 # IMPORT / GUI AND MODULES AND WIDGETS
 # ///////////////////////////////////////////////////////////////
 from modules import *
@@ -45,7 +46,7 @@ class MainWindow(QMainWindow):
 
         # APP NAME
         # ///////////////////////////////////////////////////////////////
-        title = "PyDracula - Modern GUI"
+        title = "Schematic Symbol Trainer"
         description = "PyDracula APP - Theme with colors based on Dracula for Python."
         # APPLY TEXTS
         self.setWindowTitle(title)
@@ -71,6 +72,7 @@ class MainWindow(QMainWindow):
         widgets.btn_widgets.clicked.connect(self.buttonClick)
         widgets.btn_new.clicked.connect(self.buttonClick)
         widgets.btn_save.clicked.connect(self.buttonClick)
+        widgets.btn_load.clicked.connect(self.buttonClick)
 
         # EXTRA LEFT BOX
         def openCloseLeftBox():
@@ -90,7 +92,7 @@ class MainWindow(QMainWindow):
         # SET CUSTOM THEME
         # ///////////////////////////////////////////////////////////////
         useCustomTheme = False
-        themeFile = "themes\py_dracula_light.qss"
+        themeFile = "themes\\py_dracula_light.qss"
 
         # SET THEME AND HACKS
         if useCustomTheme:
@@ -135,8 +137,11 @@ class MainWindow(QMainWindow):
         if btnName == "btn_save":
             print("Save BTN clicked!")
 
-        # PRINT BTN NAME
-        print(f'Button "{btnName}" pressed!')
+        buttonFunction = buttonfunctions.BUTTON_FUNCTION_MAP.get(btnName, None)
+        if buttonFunction is not None:
+            buttonFunction(None)
+        else:
+            print(f'ERROR: "{btnName}" not found!')
 
 
     # RESIZE EVENTS
@@ -161,4 +166,4 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon("icon.ico"))
     window = MainWindow()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
