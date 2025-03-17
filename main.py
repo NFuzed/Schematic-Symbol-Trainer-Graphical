@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
         # APP NAME
         # ///////////////////////////////////////////////////////////////
         title = "Schematic Symbol Trainer"
-        description = "PyDracula APP - Theme with colors based on Dracula for Python."
+        description = "Schematic Symbol Trainer"
         # APPLY TEXTS
         self.setWindowTitle(title)
         widgets.titleRightInfo.setText(description)
@@ -62,17 +62,27 @@ class MainWindow(QMainWindow):
 
         # QTableWidget PARAMETERS
         # ///////////////////////////////////////////////////////////////
-        widgets.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        # widgets.tabWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+        widgets.lineEdit.text()
 
         # BUTTONS CLICK
         # ///////////////////////////////////////////////////////////////
 
         # LEFT MENUS
         widgets.btn_home.clicked.connect(self.buttonClick)
-        widgets.btn_widgets.clicked.connect(self.buttonClick)
+        widgets.btn_entities.clicked.connect(self.buttonClick)
         widgets.btn_new.clicked.connect(self.buttonClick)
         widgets.btn_save.clicked.connect(self.buttonClick)
         widgets.btn_load.clicked.connect(self.buttonClick)
+        widgets.pushButton.clicked.connect(self.buttonClick)
+
+        entity_tab = QWidget(self)
+        layout = QFormLayout()
+        entity_tab.setLayout(layout)
+        layout.addRow('Phone Number:', QLineEdit(self))
+        layout.addRow('Email Address:', QLineEdit(self))
+        widgets.tabWidget.addTab(entity_tab, "Entities")
 
         # EXTRA LEFT BOX
         def openCloseLeftBox():
@@ -114,35 +124,34 @@ class MainWindow(QMainWindow):
     def buttonClick(self):
         # GET BUTTON CLICKED
         btn = self.sender()
-        btnName = btn.objectName()
+        btn_name = btn.objectName()
 
         # SHOW HOME PAGE
-        if btnName == "btn_home":
+        if btn_name == "btn_home":
             widgets.stackedWidget.setCurrentWidget(widgets.home)
-            UIFunctions.resetStyle(self, btnName)
+            UIFunctions.resetStyle(self, btn_name)
             btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet()))
 
         # SHOW WIDGETS PAGE
-        if btnName == "btn_widgets":
-            widgets.stackedWidget.setCurrentWidget(widgets.widgets)
-            UIFunctions.resetStyle(self, btnName)
+        if btn_name == "btn_entities":
+            widgets.stackedWidget.setCurrentWidget(widgets.entities)
+            UIFunctions.resetStyle(self, btn_name)
             btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet()))
 
         # SHOW NEW PAGE
-        if btnName == "btn_new":
+        if btn_name == "btn_new":
             widgets.stackedWidget.setCurrentWidget(widgets.new_page) # SET PAGE
-            UIFunctions.resetStyle(self, btnName) # RESET ANOTHERS BUTTONS SELECTED
+            UIFunctions.resetStyle(self, btn_name) # RESET ANOTHERS BUTTONS SELECTED
             btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet())) # SELECT MENU
 
-        if btnName == "btn_save":
+        if btn_name == "btn_save":
             print("Save BTN clicked!")
 
-        buttonFunction = buttonfunctions.BUTTON_FUNCTION_MAP.get(btnName, None)
+        buttonFunction = buttonfunctions.BUTTON_FUNCTION_MAP.get(btn_name, None)
         if buttonFunction is not None:
             buttonFunction(None)
         else:
-            print(f'ERROR: "{btnName}" not found!')
-
+            print(f'ERROR: "{btn_name}" not found!')
 
     # RESIZE EVENTS
     # ///////////////////////////////////////////////////////////////

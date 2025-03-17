@@ -1,0 +1,128 @@
+/* styles/main.qss */
+@import "tooltip.qss";
+@import "menu.qss";
+@import "content.qss";
+@import "buttons.qss";
+@import "scrollbars.qss";
+@import "sliders.qss";
+@import "inputs.qss";
+@import "tabwidget.qss";
+
+QWidget {
+    background-color: transparent;
+    color: rgb(221, 221, 221);
+    font: 10pt "Segoe UI";
+}
+
+#bgApp {
+    background-color: rgb(40, 44, 52);
+    border: 1px solid rgb(44, 49, 58);
+}
+
+#titleRightInfo { padding-left: 10px; }
+
+/* styles/tooltip.qss */
+QToolTip {
+    color: #ffffff;
+    background-color: rgba(33, 37, 43, 180);
+    border: 1px solid rgb(44, 49, 58);
+    background-image: none;
+    background-position: left center;
+    background-repeat: no-repeat;
+    border: none;
+    border-left: 2px solid rgb(255, 121, 198);
+    text-align: left;
+    padding-left: 8px;
+    margin: 0px;
+}
+
+/* styles/menu.qss */
+#leftMenuBg {
+    background-color: rgb(33, 37, 43);
+}
+#topLogo {
+    background-color: rgb(33, 37, 43);
+    background-image: url(:/images/images/images/PyDracula.png);
+    background-position: centered;
+    background-repeat: no-repeat;
+}
+#titleLeftApp { font: 63 12pt "Segoe UI Semibold"; }
+#titleLeftDescription { font: 8pt "Segoe UI"; color: rgb(189, 147, 249); }
+
+/* styles/content.qss */
+#contentTopBg {
+    background-color: rgb(33, 37, 43);
+}
+#contentBottom {
+    border-top: 3px solid rgb(44, 49, 58);
+}
+
+/* styles/buttons.qss */
+QPushButton {
+    background-position: left center;
+    background-repeat: no-repeat;
+    border: none;
+    border-left: 22px solid transparent;
+    background-color: transparent;
+    text-align: left;
+    padding-left: 44px;
+}
+QPushButton:hover {
+    background-color: rgb(40, 44, 52);
+}
+QPushButton:pressed {
+    background-color: rgb(189, 147, 249);
+    color: rgb(255, 255, 255);
+}
+
+/* styles/scrollbars.qss */
+QScrollBar:horizontal {
+    border: none;
+    background: rgb(52, 59, 72);
+    height: 8px;
+    margin: 0px 21px 0 21px;
+    border-radius: 0px;
+}
+QScrollBar::handle:horizontal {
+    background: rgb(189, 147, 249);
+    min-width: 25px;
+    border-radius: 4px;
+}
+
+/* styles/sliders.qss */
+QSlider::groove:horizontal {
+    border-radius: 5px;
+    height: 10px;
+    margin: 0px;
+    background-color: rgb(52, 59, 72);
+}
+QSlider::handle:horizontal {
+    background-color: rgb(189, 147, 249);
+    border: none;
+    height: 10px;
+    width: 10px;
+    margin: 0px;
+    border-radius: 5px;
+}
+
+/* styles/inputs.qss */
+QLineEdit {
+    background-color: rgb(33, 37, 43);
+    border-radius: 5px;
+    border: 2px solid rgb(33, 37, 43);
+    padding-left: 10px;
+    selection-color: rgb(255, 255, 255);
+    selection-background-color: rgb(255, 121, 198);
+}
+
+/* styles/tabwidget.qss */
+QTabWidget {
+    background-color: transparent;
+    padding: 10px;
+    border-radius: 5px;
+    gridline-color: rgb(44, 49, 58);
+    border-bottom: 1px solid rgb(44, 49, 60);
+}
+QTabWidget::item:selected {
+    background-color: rgb(189, 147, 249);
+}
