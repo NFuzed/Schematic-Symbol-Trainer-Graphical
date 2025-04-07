@@ -70,11 +70,11 @@ class MainWindow(QMainWindow):
         # ///////////////////////////////////////////////////////////////
 
         # LEFT MENUS
-        widgets.btn_home.clicked.connect(self.buttonClick)
-        widgets.btn_entities.clicked.connect(self.buttonClick)
-        widgets.btn_new.clicked.connect(self.buttonClick)
-        widgets.btn_save.clicked.connect(self.buttonClick)
-        widgets.btn_load.clicked.connect(self.buttonClick)
+        widgets.page_menu_bar.btn_home.clicked.connect(self.buttonClick)
+        widgets.page_menu_bar.btn_entities.clicked.connect(self.buttonClick)
+        widgets.page_menu_bar.btn_new.clicked.connect(self.buttonClick)
+        widgets.page_menu_bar.btn_save.clicked.connect(self.buttonClick)
+        widgets.page_menu_bar.btn_load.clicked.connect(self.buttonClick)
         widgets.pushButton.clicked.connect(self.buttonClick)
 
         entity_tab = QWidget(self)
@@ -87,13 +87,14 @@ class MainWindow(QMainWindow):
         # EXTRA LEFT BOX
         def openCloseLeftBox():
             UIFunctions.toggleLeftBox(self, True)
-        widgets.toggleLeftBox.clicked.connect(openCloseLeftBox)
+        widgets.bottom_menu_bar.settings_button.clicked.connect(openCloseLeftBox)
         widgets.extraCloseColumnBtn.clicked.connect(openCloseLeftBox)
 
         # EXTRA RIGHT BOX
         def openCloseRightBox():
             UIFunctions.toggleRightBox(self, True)
-        widgets.settingsTopBtn.clicked.connect(openCloseRightBox)
+
+        widgets.windows_control_bar.settings_button.clicked.connect(openCloseRightBox)
 
         # SHOW APP
         # ///////////////////////////////////////////////////////////////
@@ -115,7 +116,7 @@ class MainWindow(QMainWindow):
         # SET HOME PAGE AND SELECT MENU
         # ///////////////////////////////////////////////////////////////
         widgets.stackedWidget.setCurrentWidget(widgets.home)
-        widgets.btn_home.setStyleSheet(UIFunctions.selectMenu(widgets.btn_home.styleSheet()))
+        widgets.page_menu_bar.btn_home.setStyleSheet(UIFunctions.selectMenu(widgets.page_menu_bar.btn_home.styleSheet()))
 
 
     # BUTTONS CLICK
