@@ -92,7 +92,7 @@ class UIFunctions(MainWindow):
     def toggleLeftBox(self, enable):
         if enable:
             # GET WIDTH
-            width = self.ui.extraLeftBox.width()
+            width = self.ui.extraLeftBox.widget.width()
             widthRightBox = self.ui.extraRightBox.width()
             maxExtend = Settings.LEFT_BOX_WIDTH
             color = Settings.BTN_LEFT_BOX_COLOR
@@ -161,7 +161,7 @@ class UIFunctions(MainWindow):
             right_width = 0       
 
         # ANIMATION LEFT BOX        
-        self.left_box = QPropertyAnimation(self.ui.extraLeftBox, b"minimumWidth")
+        self.left_box = QPropertyAnimation(self.ui.extraLeftBox.widget, b"minimumWidth")
         self.left_box.setDuration(Settings.TIME_ANIMATION)
         self.left_box.setStartValue(left_box_width)
         self.left_box.setEndValue(left_width)

@@ -85,7 +85,7 @@ class MainWindow(QMainWindow):
         def openCloseLeftBox():
             UIFunctions.toggleLeftBox(self, True)
         widgets.bottom_menu_bar.settings_button.clicked.connect(openCloseLeftBox)
-        widgets.extraCloseColumnBtn.clicked.connect(openCloseLeftBox)
+        widgets.extraLeftBox.close_btn.clicked.connect(openCloseLeftBox)
 
         # EXTRA RIGHT BOX
         def openCloseRightBox():

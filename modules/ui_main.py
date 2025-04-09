@@ -143,155 +143,12 @@ class Ui_MainWindow(object):
         self.bottom_menu_bar = BottomMenuBar(sizePolicy, self.leftMenuFrame)
         self.verticalMenuLayout.addWidget(self.bottom_menu_bar, 0, Qt.AlignmentFlag.AlignBottom)
 
-
         self.verticalLayout_3.addWidget(self.leftMenuFrame)
 
 
         self.appLayout.addWidget(self.leftMenuBg)
 
-        self.extraLeftBox = QFrame(self.bgApp)
-        self.extraLeftBox.setObjectName(u"extraLeftBox")
-        self.extraLeftBox.setMinimumSize(QSize(0, 0))
-        self.extraLeftBox.setMaximumSize(QSize(0, 16777215))
-        self.extraLeftBox.setFrameShape(QFrame.Shape.NoFrame)
-        self.extraLeftBox.setFrameShadow(QFrame.Shadow.Raised)
-        self.extraColumLayout = QVBoxLayout(self.extraLeftBox)
-        self.extraColumLayout.setSpacing(0)
-        self.extraColumLayout.setObjectName(u"extraColumLayout")
-        self.extraColumLayout.setContentsMargins(0, 0, 0, 0)
-        self.extraTopBg = QFrame(self.extraLeftBox)
-        self.extraTopBg.setObjectName(u"extraTopBg")
-        self.extraTopBg.setMinimumSize(QSize(0, 50))
-        self.extraTopBg.setMaximumSize(QSize(16777215, 50))
-        self.extraTopBg.setFrameShape(QFrame.Shape.NoFrame)
-        self.extraTopBg.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_5 = QVBoxLayout(self.extraTopBg)
-        self.verticalLayout_5.setSpacing(0)
-        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
-        self.extraTopLayout = QGridLayout()
-        self.extraTopLayout.setObjectName(u"extraTopLayout")
-        self.extraTopLayout.setHorizontalSpacing(10)
-        self.extraTopLayout.setVerticalSpacing(0)
-        self.extraTopLayout.setContentsMargins(10, -1, 10, -1)
-        self.extraIcon = QFrame(self.extraTopBg)
-        self.extraIcon.setObjectName(u"extraIcon")
-        self.extraIcon.setMinimumSize(QSize(20, 0))
-        self.extraIcon.setMaximumSize(QSize(20, 20))
-        self.extraIcon.setFrameShape(QFrame.Shape.NoFrame)
-        self.extraIcon.setFrameShadow(QFrame.Shadow.Raised)
-
-        self.extraTopLayout.addWidget(self.extraIcon, 0, 0, 1, 1)
-
-        self.extraLabel = QLabel(self.extraTopBg)
-        self.extraLabel.setObjectName(u"extraLabel")
-        self.extraLabel.setMinimumSize(QSize(150, 0))
-
-        self.extraTopLayout.addWidget(self.extraLabel, 0, 1, 1, 1)
-
-        self.extraCloseColumnBtn = QPushButton(self.extraTopBg)
-        self.extraCloseColumnBtn.setObjectName(u"extraCloseColumnBtn")
-        self.extraCloseColumnBtn.setMinimumSize(QSize(28, 28))
-        self.extraCloseColumnBtn.setMaximumSize(QSize(28, 28))
-        self.extraCloseColumnBtn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        icon = QIcon()
-        icon.addFile(u":/icons/images/icons/icon_close.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.extraCloseColumnBtn.setIcon(icon)
-        self.extraCloseColumnBtn.setIconSize(QSize(20, 20))
-
-        self.extraTopLayout.addWidget(self.extraCloseColumnBtn, 0, 2, 1, 1)
-
-
-        self.verticalLayout_5.addLayout(self.extraTopLayout)
-
-
-        self.extraColumLayout.addWidget(self.extraTopBg)
-
-        self.extraContent = QFrame(self.extraLeftBox)
-        self.extraContent.setObjectName(u"extraContent")
-        self.extraContent.setFrameShape(QFrame.Shape.NoFrame)
-        self.extraContent.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_12 = QVBoxLayout(self.extraContent)
-        self.verticalLayout_12.setSpacing(0)
-        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
-        self.verticalLayout_12.setContentsMargins(0, 0, 0, 0)
-        self.extraTopMenu = QFrame(self.extraContent)
-        self.extraTopMenu.setObjectName(u"extraTopMenu")
-        self.extraTopMenu.setFrameShape(QFrame.Shape.NoFrame)
-        self.extraTopMenu.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_11 = QVBoxLayout(self.extraTopMenu)
-        self.verticalLayout_11.setSpacing(0)
-        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
-        self.verticalLayout_11.setContentsMargins(0, 0, 0, 0)
-        self.btn_share = QPushButton(self.extraTopMenu)
-        self.btn_share.setObjectName(u"btn_share")
-        sizePolicy.setHeightForWidth(self.btn_share.sizePolicy().hasHeightForWidth())
-        self.btn_share.setSizePolicy(sizePolicy)
-        self.btn_share.setMinimumSize(QSize(0, 45))
-        self.btn_share.setFont(font)
-        self.btn_share.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btn_share.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btn_share.setStyleSheet(u"background-image: url(:/icons/images/icons/cil-share-boxed.png);")
-
-        self.verticalLayout_11.addWidget(self.btn_share)
-
-        self.btn_adjustments = QPushButton(self.extraTopMenu)
-        self.btn_adjustments.setObjectName(u"btn_adjustments")
-        sizePolicy.setHeightForWidth(self.btn_adjustments.sizePolicy().hasHeightForWidth())
-        self.btn_adjustments.setSizePolicy(sizePolicy)
-        self.btn_adjustments.setMinimumSize(QSize(0, 45))
-        self.btn_adjustments.setFont(font)
-        self.btn_adjustments.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btn_adjustments.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btn_adjustments.setStyleSheet(u"background-image: url(:/icons/images/icons/cil-equalizer.png);")
-
-        self.verticalLayout_11.addWidget(self.btn_adjustments)
-
-        self.btn_more = QPushButton(self.extraTopMenu)
-        self.btn_more.setObjectName(u"btn_more")
-        sizePolicy.setHeightForWidth(self.btn_more.sizePolicy().hasHeightForWidth())
-        self.btn_more.setSizePolicy(sizePolicy)
-        self.btn_more.setMinimumSize(QSize(0, 45))
-        self.btn_more.setFont(font)
-        self.btn_more.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btn_more.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btn_more.setStyleSheet(u"background-image: url(:/icons/images/icons/cil-layers.png);")
-
-        self.verticalLayout_11.addWidget(self.btn_more)
-
-
-        self.verticalLayout_12.addWidget(self.extraTopMenu, 0, Qt.AlignmentFlag.AlignTop)
-
-        self.extraCenter = QFrame(self.extraContent)
-        self.extraCenter.setObjectName(u"extraCenter")
-        self.extraCenter.setFrameShape(QFrame.Shape.NoFrame)
-        self.extraCenter.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_10 = QVBoxLayout(self.extraCenter)
-        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
-        self.textEdit = QTextEdit(self.extraCenter)
-        self.textEdit.setObjectName(u"textEdit")
-        self.textEdit.setMinimumSize(QSize(222, 0))
-        self.textEdit.setStyleSheet(u"background: transparent;")
-        self.textEdit.setFrameShape(QFrame.Shape.NoFrame)
-        self.textEdit.setReadOnly(True)
-
-        self.verticalLayout_10.addWidget(self.textEdit)
-
-
-        self.verticalLayout_12.addWidget(self.extraCenter)
-
-        self.extraBottom = QFrame(self.extraContent)
-        self.extraBottom.setObjectName(u"extraBottom")
-        self.extraBottom.setFrameShape(QFrame.Shape.NoFrame)
-        self.extraBottom.setFrameShadow(QFrame.Shadow.Raised)
-
-        self.verticalLayout_12.addWidget(self.extraBottom)
-
-
-        self.extraColumLayout.addWidget(self.extraContent)
-
-
-        self.appLayout.addWidget(self.extraLeftBox)
+        self.extraLeftBox = ModelConfigurationMenuBar(self.bgApp, sizePolicy, font, self.appLayout)
 
         self.contentBox = QFrame(self.bgApp)
         self.contentBox.setObjectName(u"contentBox")
@@ -569,15 +426,15 @@ class Ui_MainWindow(object):
         self.page_menu_bar.btn_load.setText(QCoreApplication.translate("MainWindow", u"Load", None))
         self.page_menu_bar.btn_exit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
         self.bottom_menu_bar.settings_button.setText(QCoreApplication.translate("MainWindow", u"Left Box", None))
-        self.extraLabel.setText(QCoreApplication.translate("MainWindow", u"Left Box", None))
+        self.extraLeftBox.label.setText(QCoreApplication.translate("MainWindow", u"Left Box", None))
 #if QT_CONFIG(tooltip)
-        self.extraCloseColumnBtn.setToolTip(QCoreApplication.translate("MainWindow", u"Close left box", None))
+        self.extraLeftBox.close_btn.setToolTip(QCoreApplication.translate("MainWindow", u"Close left box", None))
 #endif // QT_CONFIG(tooltip)
-        self.extraCloseColumnBtn.setText("")
-        self.btn_share.setText(QCoreApplication.translate("MainWindow", u"Share", None))
-        self.btn_adjustments.setText(QCoreApplication.translate("MainWindow", u"Adjustments", None))
-        self.btn_more.setText(QCoreApplication.translate("MainWindow", u"More", None))
-        self.textEdit.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.extraLeftBox.close_btn.setText("")
+        # self.extraLeftBox.btn_share.setText(QCoreApplication.translate("MainWindow", u"Share", None))
+        # self.extraLeftBox.btn_adjustments.setText(QCoreApplication.translate("MainWindow", u"Adjustments", None))
+        # self.extraLeftBox.btn_more.setText(QCoreApplication.translate("MainWindow", u"More", None))
+        self.extraLeftBox.text_edit.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
