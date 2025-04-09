@@ -64,7 +64,7 @@ class MainWindow(QMainWindow):
         # ///////////////////////////////////////////////////////////////
         # widgets.tabWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-        widgets.lineEdit.text()
+        # widgets.lineEdit.text()
 
         # BUTTONS CLICK
         # ///////////////////////////////////////////////////////////////
@@ -75,14 +75,11 @@ class MainWindow(QMainWindow):
         widgets.page_menu_bar.btn_new.clicked.connect(self.buttonClick)
         widgets.page_menu_bar.btn_save.clicked.connect(self.buttonClick)
         widgets.page_menu_bar.btn_load.clicked.connect(self.buttonClick)
-        widgets.pushButton.clicked.connect(self.buttonClick)
+        # widgets.pushButton.clicked.connect(self.buttonClick)
 
-        entity_tab = QWidget(self)
-        layout = QFormLayout()
-        entity_tab.setLayout(layout)
-        layout.addRow('Phone Number:', QLineEdit(self))
-        layout.addRow('Email Address:', QLineEdit(self))
-        widgets.tabWidget.addTab(entity_tab, "Entities")
+        widgets.entities.add_tab(QWidget(), "Entity 1")
+        widgets.entities.add_tab(QWidget(), "Entity 2")
+        widgets.entities.add_tab(QWidget(), "Entity 3")
 
         # EXTRA LEFT BOX
         def openCloseLeftBox():
@@ -115,7 +112,7 @@ class MainWindow(QMainWindow):
 
         # SET HOME PAGE AND SELECT MENU
         # ///////////////////////////////////////////////////////////////
-        widgets.stackedWidget.setCurrentWidget(widgets.home)
+        widgets.stackedWidget.setCurrentWidget(widgets.home.widget)
         widgets.page_menu_bar.btn_home.setStyleSheet(UIFunctions.selectMenu(widgets.page_menu_bar.btn_home.styleSheet()))
 
 
@@ -129,13 +126,13 @@ class MainWindow(QMainWindow):
 
         # SHOW HOME PAGE
         if btn_name == "btn_home":
-            widgets.stackedWidget.setCurrentWidget(widgets.home)
+            widgets.stackedWidget.setCurrentWidget(widgets.home.widget)
             UIFunctions.resetStyle(self, btn_name)
             btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet()))
 
         # SHOW WIDGETS PAGE
         if btn_name == "btn_entities":
-            widgets.stackedWidget.setCurrentWidget(widgets.entities)
+            widgets.stackedWidget.setCurrentWidget(widgets.entities.widget)
             UIFunctions.resetStyle(self, btn_name)
             btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet()))
 

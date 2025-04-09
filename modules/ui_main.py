@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
 import os
 from . resources_rc import *
 from . menubars import *
+from . controllers import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -376,169 +377,14 @@ class Ui_MainWindow(object):
         self.verticalLayout_15.setSpacing(0)
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
         self.verticalLayout_15.setContentsMargins(10, 10, 10, 10)
+
+
         self.stackedWidget = QStackedWidget(self.pagesContainer)
         self.stackedWidget.setObjectName(u"stackedWidget")
         self.stackedWidget.setStyleSheet(u"background: transparent;")
-        self.home = QWidget()
-        self.home.setObjectName(u"home")
-        self.home.setStyleSheet(u"background-image: url(:/images/images/images/PyDracula_vertical.png);\n"
-"background-position: center;\n"
-"background-repeat: no-repeat;")
-        self.stackedWidget.addWidget(self.home)
-        self.entities = QWidget()
-        self.entities.setObjectName(u"entities")
-        self.entities.setStyleSheet(u"b")
-        self.verticalLayout = QVBoxLayout(self.entities)
-        self.verticalLayout.setSpacing(10)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(10, 10, 10, 10)
-        self.row_1 = QFrame(self.entities)
-        self.row_1.setObjectName(u"row_1")
-        self.row_1.setFrameShape(QFrame.Shape.StyledPanel)
-        self.row_1.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_16 = QVBoxLayout(self.row_1)
-        self.verticalLayout_16.setSpacing(0)
-        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
-        self.verticalLayout_16.setContentsMargins(0, 0, 0, 0)
-        self.frame_div_content_1 = QFrame(self.row_1)
-        self.frame_div_content_1.setObjectName(u"frame_div_content_1")
-        self.frame_div_content_1.setMinimumSize(QSize(0, 110))
-        self.frame_div_content_1.setMaximumSize(QSize(16777215, 110))
-        self.frame_div_content_1.setFrameShape(QFrame.Shape.NoFrame)
-        self.frame_div_content_1.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_17 = QVBoxLayout(self.frame_div_content_1)
-        self.verticalLayout_17.setSpacing(0)
-        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
-        self.verticalLayout_17.setContentsMargins(0, 0, 0, 0)
-        self.frame_title_wid_1 = QFrame(self.frame_div_content_1)
-        self.frame_title_wid_1.setObjectName(u"frame_title_wid_1")
-        self.frame_title_wid_1.setMaximumSize(QSize(16777215, 35))
-        self.frame_title_wid_1.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_title_wid_1.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_18 = QVBoxLayout(self.frame_title_wid_1)
-        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
-        self.labelBoxBlenderInstalation = QLabel(self.frame_title_wid_1)
-        self.labelBoxBlenderInstalation.setObjectName(u"labelBoxBlenderInstalation")
-        self.labelBoxBlenderInstalation.setFont(font)
-        self.labelBoxBlenderInstalation.setStyleSheet(u"")
+        self.home = HomeController(self.stackedWidget)
+        self.entities = EntityController(self.stackedWidget)
 
-        self.verticalLayout_18.addWidget(self.labelBoxBlenderInstalation)
-
-
-        self.verticalLayout_17.addWidget(self.frame_title_wid_1)
-
-        self.frame_content_wid_1 = QFrame(self.frame_div_content_1)
-        self.frame_content_wid_1.setObjectName(u"frame_content_wid_1")
-        self.frame_content_wid_1.setFrameShape(QFrame.Shape.NoFrame)
-        self.frame_content_wid_1.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_9 = QHBoxLayout(self.frame_content_wid_1)
-        self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
-        self.gridLayout = QGridLayout()
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.gridLayout.setContentsMargins(-1, -1, -1, 0)
-        self.lineEdit = QLineEdit(self.frame_content_wid_1)
-        self.lineEdit.setObjectName(u"lineEdit")
-        self.lineEdit.setMinimumSize(QSize(0, 30))
-        self.lineEdit.setStyleSheet(u"background-color: rgb(33, 37, 43);")
-
-        self.gridLayout.addWidget(self.lineEdit, 0, 0, 1, 1)
-
-        self.pushButton = QPushButton(self.frame_content_wid_1)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setMinimumSize(QSize(150, 30))
-        self.pushButton.setFont(font)
-        self.pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.pushButton.setStyleSheet(u"background-color: rgb(52, 59, 72);")
-        icon4 = QIcon()
-        icon4.addFile(u":/icons/images/icons/cil-equalizer.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton.setIcon(icon4)
-
-        self.gridLayout.addWidget(self.pushButton, 0, 1, 1, 1)
-
-        self.labelVersion_3 = QLabel(self.frame_content_wid_1)
-        self.labelVersion_3.setObjectName(u"labelVersion_3")
-        self.labelVersion_3.setStyleSheet(u"color: rgb(113, 126, 149);")
-        self.labelVersion_3.setLineWidth(1)
-        self.labelVersion_3.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-
-        self.gridLayout.addWidget(self.labelVersion_3, 1, 0, 1, 2)
-
-
-        self.horizontalLayout_9.addLayout(self.gridLayout)
-
-
-        self.verticalLayout_17.addWidget(self.frame_content_wid_1)
-
-
-        self.verticalLayout_16.addWidget(self.frame_div_content_1)
-
-
-        self.verticalLayout.addWidget(self.row_1)
-
-        self.row_2 = QFrame(self.entities)
-        self.row_2.setObjectName(u"row_2")
-        self.row_2.setMinimumSize(QSize(0, 150))
-        font4 = QFont()
-        font4.setFamilies([u"Segoe UI"])
-        font4.setPointSize(10)
-        font4.setBold(False)
-        font4.setItalic(False)
-        font4.setKerning(False)
-        self.row_2.setFont(font4)
-#         self.row_2.setStyleSheet(u"background-color: rgb(40, 44, 52);\n"
-# "border-color: rgb(40, 44, 52);\n"
-# "alternate-background-color: rgb(40, 44, 52);\n"
-# "border: 0px;\n"
-# "border-bottom: 0px solid #C2C7CB;")
-        self.row_2.setFrameShape(QFrame.Shape.NoFrame)
-        self.row_2.setFrameShadow(QFrame.Shadow.Plain)
-        self.row_2.setLineWidth(0)
-        self.verticalLayout_19 = QVBoxLayout(self.row_2)
-        self.verticalLayout_19.setObjectName(u"verticalLayout_19")
-        self.tabWidget = QTabWidget(self.row_2)
-        self.tabWidget.setObjectName(u"tabWidget")
-        font5 = QFont()
-        font5.setFamilies([u"Segoe UI"])
-        font5.setPointSize(10)
-        font5.setBold(False)
-        font5.setItalic(False)
-        font5.setKerning(True)
-        self.tabWidget.setFont(font5)
-        self.tabWidget.setFocusPolicy(Qt.FocusPolicy.TabFocus)
-        # self.tabWidget.setAutoFillBackground(True)
-#         self.tabWidget.setStyleSheet(u"background-color: rgb(33, 37, 43);\n"
-# "border: 0px;\n"
-# "QTabWidget::tab-bar {\n"
-# "   border: 19px solid gra\n"
-# "QTabBar::tab {\n"
-# "  background: gray;\n"
-# "  color: white;\n"
-# "  padding: 10px;\n"
-# " }\n"
-# "\n"
-# " QTabBar::tab:selected {\n"
-# "  background: lightgray;\n"
-# " }y;\n"
-# "}")
-        self.tabWidget.setTabShape(QTabWidget.TabShape.Rounded)
-        self.tab = QWidget()
-        self.tab.setObjectName(u"tab")
-        self.tab.setAutoFillBackground(False)
-        self.tab.setStyleSheet(u"QTabBar::tab:hover {\n"
-"    background: lightgray; /* Color when hovering over a tab */\n"
-"}")
-        self.tabWidget.addTab(self.tab, "")
-        self.tab_2 = QWidget()
-        self.tab_2.setObjectName(u"tab_2")
-        self.tab_2.setAutoFillBackground(True)
-        self.tabWidget.addTab(self.tab_2, "")
-
-        self.verticalLayout_19.addWidget(self.tabWidget)
-
-
-        self.verticalLayout.addWidget(self.row_2)
-
-        self.stackedWidget.addWidget(self.entities)
         self.new_page = QWidget()
         self.new_page.setObjectName(u"new_page")
         self.verticalLayout_20 = QVBoxLayout(self.new_page)
@@ -692,13 +538,13 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.stackedWidget.setCurrentIndex(1)
-        self.tabWidget.setCurrentIndex(0)
+        
 
 
         QMetaObject.connectSlotsByName(MainWindow)
 
     # setupUi
-    def apply_stylesheet(self, MainWindow):
+    def apply_stylesheet(self, main_window):
         """Loads the stylesheet from an external QSS file."""
         styles_dir = os.path.join(os.path.dirname(__file__), "styles")
         qss_file = os.path.join(styles_dir, "main.qss")
@@ -706,7 +552,7 @@ class Ui_MainWindow(object):
         if os.path.exists(qss_file):
             with open(qss_file, "r", encoding="utf-8") as f:
                 qss = f.read()
-                MainWindow.setStyleSheet(qss)
+                main_window.setStyleSheet(qss)
         else:
             print(f"Stylesheet not found: {qss_file}")
 
@@ -755,13 +601,7 @@ class Ui_MainWindow(object):
         # self.maximizeRestoreAppBtn.setToolTip(QCoreApplication.translate("MainWindow", u"Maximize", None))
         # self.closeAppBtn.setToolTip(QCoreApplication.translate("MainWindow", u"Close", None))
 
-        self.labelBoxBlenderInstalation.setText(QCoreApplication.translate("MainWindow", u"ENTITIES", None))
-        self.lineEdit.setText("")
-        self.lineEdit.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Type here", None))
-        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Filter", None))
-        self.labelVersion_3.setText(QCoreApplication.translate("MainWindow", u"Filter for Entities", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Tab 1", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Tab 2", None))
+
         self.label.setText(QCoreApplication.translate("MainWindow", u"NEW PAGE TEST", None))
         self.btn_message.setText(QCoreApplication.translate("MainWindow", u"Message", None))
         self.btn_print.setText(QCoreApplication.translate("MainWindow", u"Print", None))
