@@ -24,6 +24,7 @@ import os
 from . resources_rc import *
 from . menubars import *
 from . controllers import *
+from . utilities import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -241,6 +242,10 @@ class Ui_MainWindow(object):
         self.stackedWidget.setStyleSheet(u"background: transparent;")
         self.home = HomeController(self.stackedWidget)
         self.entities = EntityController(self.stackedWidget)
+
+        self.image_viewer = ImageViewer()
+        self.diagram = DiagramController(self.image_viewer, self.stackedWidget)
+        self.image_viewer.image_snipped.connect(lambda image: self.diagram.handle_snipped_image(image))
 
         self.new_page = QWidget()
         self.new_page.setObjectName(u"new_page")

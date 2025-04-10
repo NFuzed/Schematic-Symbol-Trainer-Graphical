@@ -71,6 +71,7 @@ class MainWindow(QMainWindow):
 
         # LEFT MENUS
         widgets.page_menu_bar.btn_home.clicked.connect(self.buttonClick)
+        widgets.page_menu_bar.btn_view.clicked.connect(self.buttonClick)
         widgets.page_menu_bar.btn_entities.clicked.connect(self.buttonClick)
         widgets.page_menu_bar.btn_new.clicked.connect(self.buttonClick)
         widgets.page_menu_bar.btn_save.clicked.connect(self.buttonClick)
@@ -129,6 +130,12 @@ class MainWindow(QMainWindow):
         # SHOW WIDGETS PAGE
         if btn_name == "btn_entities":
             widgets.stackedWidget.setCurrentWidget(widgets.entities.widget)
+            UIFunctions.resetStyle(self, btn_name)
+            btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet()))
+
+        # SHOW DIAGRAM PAGE
+        if btn_name == "btn_view":
+            widgets.stackedWidget.setCurrentWidget(widgets.diagram.widget)
             UIFunctions.resetStyle(self, btn_name)
             btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet()))
 
