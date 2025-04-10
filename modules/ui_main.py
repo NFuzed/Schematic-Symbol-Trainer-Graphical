@@ -25,9 +25,10 @@ from . resources_rc import *
 from . menubars import *
 from . controllers import *
 from . utilities import *
+import core
 
 class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+    def setupUi(self, MainWindow, core):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(1280, 720)
@@ -241,7 +242,7 @@ class Ui_MainWindow(object):
         self.stackedWidget.setObjectName(u"stackedWidget")
         self.stackedWidget.setStyleSheet(u"background: transparent;")
         self.home = HomeController(self.stackedWidget)
-        self.entities = EntityController(self.stackedWidget)
+        self.entities = EntityController(core, self.stackedWidget)
 
         self.image_viewer = ImageViewer()
         self.diagram = DiagramController(self.image_viewer, self.stackedWidget)

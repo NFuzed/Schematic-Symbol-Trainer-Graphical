@@ -8,17 +8,23 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
     QLabel, QLineEdit, QMainWindow, QPushButton,
     QSizePolicy, QStackedWidget, QTabWidget, QTextEdit,
-    QVBoxLayout, QWidget, QMessageBox)
+    QVBoxLayout, QWidget, QMessageBox, QDialog, QFormLayout, QDialogButtonBox)
 import os
 from pathlib import Path
+from core import Core
+from src.core import EntityManager
 
 DIALOG_QSS = "dialog.qss"
 
 
 class EntityController:
-    def __init__(self, parent=None):
+    def __init__(self, core : Core, parent=None):
         self.widget = QWidget(parent)
+        self.core : Core = core
         parent.addWidget(self.widget)
+
+        self.entity_manager_to_widget: Dict(EntityManager, QWidget) = {}
+        self.widget_to_entity_manager: Dict(QWidget, EntityManager) = {}
 
         self.tab_widget = QTabWidget()
         self.filter_button = QPushButton("Filter")
@@ -28,6 +34,7 @@ class EntityController:
 
         self.setup_ui()
         self.setup_styles("entities_page.qss", self.widget)
+        self.register_for_events()
 
     def setup_ui(self):
         """Initialize all UI components"""
@@ -112,6 +119,14 @@ class EntityController:
 
     def confirm_tab_close(self, index):
         """Show confirmation dialog before closing tab"""
+        widget = self.tab_widget.widget(index)
+        if widget is None:
+            return
+
+        entity_manager = self.widget_to_entity_manager.get(widget)
+        if entity_manager is None:
+            return
+
         tab_name = self.tab_widget.tabText(index)
 
         dialog = QMessageBox(self.widget)
@@ -123,11 +138,10 @@ class EntityController:
         self.setup_styles(DIALOG_QSS, dialog)
 
         if dialog.exec() == QMessageBox.Yes:
-            self.remove_tab(index)
+            self.core.database.delete_entity_manager(entity_manager)
 
     def show_new_entity_dialog(self):
         """Show dialog for creating new entity"""
-        from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFormLayout
 
         dialog = QDialog(self.widget)
         dialog.setWindowTitle("New Entity")
@@ -166,20 +180,38 @@ class EntityController:
         else:
             print(f"Stylesheet not found: {qss_file}")
 
-    def add_tab(self, widget, title):
+    def add_tab(self, widget, entity_name):
         """Add a new tab to the tab widget
 
         Args:
             widget (QWidget): The widget to add as a tab
-            title (str): The title for the tab
+            entity_name (str): The title for the tab
         """
-        self.tab_widget.addTab(widget, title)
+        widget.accept()
+        self.core.database.create_entity_manager(entity_name)
 
-    def remove_tab(self, index):
+    def remove_tab(self, entity_manager: EntityManager):
         """Remove tab and perform any cleanup"""
-        if 0 <= index < self.tab_widget.count():
-            # Get the widget before removal if you need to clean up resources
-            self.tab_widget.removeTab(index)
+        widget = self.entity_manager_to_widget.get(entity_manager)
+        if widget is not None:
+            index = self.tab_widget.indexOf(widget)
+            if index >= 0:
+                self.tab_widget.removeTab(index)
+
+            del self.entity_manager_to_widget[entity_manager]
+            if widget in self.widget_to_entity_manager:
+                del self.widget_to_entity_manager[widget]
+
+    def register_for_events(self):
+        self.core.database.created_entity_manager_observer.bind(lambda entity_manager: self.create_tab(entity_manager))
+        self.core.database.destroyed_entity_manager_observer.bind(lambda entity_manager: self.remove_tab(entity_manager))
+
+    def create_tab(self, entity_manager: EntityManager):
+        """Create a new tab for the entity manager"""
+        tab_widget = QWidget()
+        self.entity_manager_to_widget[entity_manager] = tab_widget
+        self.widget_to_entity_manager[tab_widget] = entity_manager
+        self.tab_widget.addTab(tab_widget, entity_manager.entity_manager_name)
 
     def clear_tabs(self):
         """Remove all tabs"""
