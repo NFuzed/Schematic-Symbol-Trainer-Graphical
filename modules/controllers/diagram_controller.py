@@ -3,10 +3,13 @@ from PySide6.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsPixmapIte
                               QWidget, QPushButton, QComboBox, QLabel, QScrollArea)
 from PySide6.QtGui import QPixmap, QImage, QPainter
 from PySide6.QtCore import Qt, QRect, QPoint, QSize, Signal
+from core import Core
+import numpy as np
 
 class DiagramController:
-    def __init__(self, image_viewer, parent=None):
+    def __init__(self, image_viewer, core: Core, parent=None):
         self.widget = QWidget(parent)
+        self.core = core
         parent.addWidget(self.widget)
 
         # Main components
@@ -33,6 +36,7 @@ class DiagramController:
 
         # Entity Selection
         self.setup_entity_selection()
+        self.register_for_events()
 
     def setup_control_panel(self):
         """Create the control buttons"""
@@ -92,10 +96,11 @@ class DiagramController:
 
     def handle_snipped_image(self, image):
         """Handle the snipped image (connect your custom logic here)"""
-        if not image.isNull() and self.entity_dropdown.currentText():
-            entity_name = self.entity_dropdown.currentText()
-            print(f"Processing snipped image for entity: {entity_name}")
-            #todo: handle the QImage as needed
+        # TODO: Fix bug where method is called twice and entities are duplicated
+        if not image.isNull() and self.entity_dropdown.itemData(self.entity_dropdown.currentIndex()):
+            converted_image = self.q_image_to_numpy(image)
+            entity_manager = self.entity_dropdown.itemData(self.entity_dropdown.currentIndex())
+            entity_manager.create_entity(converted_image)
 
     def save_selection(self):
         """Trigger image snipping (handled via the image_snipped signal)"""
@@ -138,3 +143,43 @@ class DiagramController:
                 border: 1px solid #44475a;
             }
         """)
+
+    def register_for_events(self):
+        """Connect to entity manager changes"""
+        self.core.database.created_entity_manager_observer.bind(self._add_entity_to_dropdown)
+        self.core.database.destroyed_entity_manager_observer.bind(self._remove_entity_from_dropdown)
+
+    def _add_entity_to_dropdown(self, entity_manager):
+        """Add an entity to the dropdown"""
+        self.entity_dropdown.addItem(entity_manager.entity_manager_name, entity_manager)
+
+    def _remove_entity_from_dropdown(self, entity_manager):
+        """Remove an entity from the dropdown"""
+        index = self._find_entity_index(entity_manager)
+        if index >= 0:
+            self.entity_dropdown.removeItem(index)
+
+    def _find_entity_index(self, entity_manager):
+        """Find the combo box index for an entity manager"""
+        for i in range(self.entity_dropdown.count()):
+            if self.entity_dropdown.itemData(i) == entity_manager:
+                return i
+        return -1
+
+    def get_current_entity(self):
+        """Get the currently selected entity manager"""
+        if self.entity_dropdown.currentIndex() >= 0:
+            return self.entity_dropdown.itemData(self.entity_dropdown.currentIndex())
+        return None
+
+    def q_image_to_numpy(self, q_image: QImage):
+        """Convert QImage to numpy array (works in PySide6 6.4+)"""
+        q_image = q_image.convertToFormat(QImage.Format.Format_RGBA8888)
+        buffer = q_image.constBits()
+
+        arr = np.frombuffer(buffer, dtype=np.uint8).reshape(
+            q_image.height(),
+            q_image.width(),
+            4  # RGBA
+        )
+        return arr.copy()

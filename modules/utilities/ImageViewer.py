@@ -2,8 +2,8 @@ from PySide6.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsPixmapIte
                                QRubberBand, QFileDialog, QVBoxLayout, QHBoxLayout,
                                QWidget, QPushButton, QComboBox, QLabel, QScrollArea)
 from PySide6.QtGui import QPixmap, QImage, QPainter
-from PySide6.QtCore import Qt, QRect, QPoint, QSize, Signal
-
+from PySide6.QtCore import Qt, QRect, QPoint, QSize, Signal, QTime
+import numpy as np
 
 class ImageViewer(QGraphicsView):
     image_snipped = Signal(QImage)  # Signal emitted when image is snipped
@@ -62,15 +62,22 @@ class ImageViewer(QGraphicsView):
         super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
-        """Finalize selection and emit snipped image"""
-        if event.button() == Qt.MouseButton.RightButton and self.rubber_band.isVisible():
-            self.snip_rect = self.rubber_band.geometry()
-            self.rubber_band.hide()
-            self.emit_snipped_image()
+        if event.button() == Qt.MouseButton.RightButton:
+            if self.rubber_band.isVisible():
+                event.accept()
+                self.snip_rect = self.rubber_band.geometry()
+                self.rubber_band.hide()
+
+                # Only emit if we actually have a valid selection
+                if not self.snip_rect.isNull() and self.snip_rect.isValid():
+                    self.emit_snipped_image()
+            return  # Skip parent handling for right button
         super().mouseReleaseEvent(event)
 
     def emit_snipped_image(self):
         """Convert selection to QImage and emit signal"""
+        print(f"Emitting at {QTime.currentTime().toString('hh:mm:ss.zzz')}")
+
         if self.pixmap and not self.snip_rect.isNull():
             scene_rect = self.mapToScene(self.snip_rect).boundingRect().toRect()
             snipped_image = self.pixmap.copy(scene_rect).toImage()

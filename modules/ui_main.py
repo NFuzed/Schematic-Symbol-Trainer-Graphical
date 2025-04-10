@@ -245,7 +245,7 @@ class Ui_MainWindow(object):
         self.entities = EntityController(core, self.stackedWidget)
 
         self.image_viewer = ImageViewer()
-        self.diagram = DiagramController(self.image_viewer, self.stackedWidget)
+        self.diagram = DiagramController(self.image_viewer, core, self.stackedWidget)
         self.image_viewer.image_snipped.connect(lambda image: self.diagram.handle_snipped_image(image))
 
         self.new_page = QWidget()
