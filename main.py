@@ -23,7 +23,10 @@ import buttonfunctions
 # ///////////////////////////////////////////////////////////////
 from modules import *
 from widgets import *
+
 os.environ["QT_FONT_DPI"] = "96" # FIX Problem for High DPI and Scale above 100%
+
+import core
 
 # SET AS GLOBAL WIDGETS
 # ///////////////////////////////////////////////////////////////
@@ -32,6 +35,8 @@ widgets = None
 class MainWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
+
+        core.Core()
 
         # SET AS GLOBAL WIDGETS
         # ///////////////////////////////////////////////////////////////
