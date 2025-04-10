@@ -13,6 +13,8 @@ import os
 from pathlib import Path
 from core import Core
 from src.core import EntityManager
+from ..utilities import *
+from ..utilities.entity_gallery import EntityGallery
 
 DIALOG_QSS = "dialog.qss"
 
@@ -208,10 +210,10 @@ class EntityController:
 
     def create_tab(self, entity_manager: EntityManager):
         """Create a new tab for the entity manager"""
-        tab_widget = QWidget()
+        tab_widget = EntityGallery(entity_manager)
         self.entity_manager_to_widget[entity_manager] = tab_widget
-        self.widget_to_entity_manager[tab_widget] = entity_manager
-        self.tab_widget.addTab(tab_widget, entity_manager.entity_manager_name)
+        self.widget_to_entity_manager[tab_widget.widget] = entity_manager
+        self.tab_widget.addTab(tab_widget.widget, entity_manager.entity_manager_name)
 
     def clear_tabs(self):
         """Remove all tabs"""
