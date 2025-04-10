@@ -77,10 +77,6 @@ class MainWindow(QMainWindow):
         widgets.page_menu_bar.btn_load.clicked.connect(self.buttonClick)
         # widgets.pushButton.clicked.connect(self.buttonClick)
 
-        widgets.entities.add_tab(QWidget(), "Entity 1")
-        widgets.entities.add_tab(QWidget(), "Entity 2")
-        widgets.entities.add_tab(QWidget(), "Entity 3")
-
         # EXTRA LEFT BOX
         def openCloseLeftBox():
             UIFunctions.toggleLeftBox(self, True)

@@ -20,6 +20,15 @@
     padding: 5px;
 }
 
+#newEntityButton {
+    background-color: rgb(52, 59, 72);
+    border: 1px solid rgb(44, 49, 58);
+    border-radius: 4px;
+    min-width: 150px;
+    min-height: 30px;
+    padding: 5px;
+}
+
 #filterButton:hover {
     background-color: rgb(57, 65, 80);
 }

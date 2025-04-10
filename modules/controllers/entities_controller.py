@@ -8,9 +8,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
     QLabel, QLineEdit, QMainWindow, QPushButton,
     QSizePolicy, QStackedWidget, QTabWidget, QTextEdit,
-    QVBoxLayout, QWidget)
+    QVBoxLayout, QWidget, QMessageBox)
 import os
 from pathlib import Path
+
+DIALOG_QSS = "dialog.qss"
 
 
 class EntityController:
@@ -20,11 +22,12 @@ class EntityController:
 
         self.tab_widget = QTabWidget()
         self.filter_button = QPushButton("Filter")
+        self.new_entity_button = QPushButton("New Entity")
         self.search_input = QLineEdit()
         self.main_layout = QVBoxLayout(self.widget)
 
         self.setup_ui()
-        self.setup_styles()
+        self.setup_styles("entities_page.qss", self.widget)
 
     def setup_ui(self):
         """Initialize all UI components"""
@@ -64,12 +67,18 @@ class EntityController:
         self.filter_button.setIcon(QIcon(":/icons/images/icons/cil-equalizer.png"))
         self.filter_button.clicked.connect(self.filter_entities)
 
+        self.new_entity_button.setObjectName("newEntityButton")
+        self.new_entity_button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.new_entity_button.setIcon(QIcon(":/icons/images/icons/cil-plus.png"))
+        self.new_entity_button.clicked.connect(self.show_new_entity_dialog)
+
         filter_label = QLabel("Filter for Entities")
         filter_label.setObjectName("filterLabel")
 
         search_grid = QGridLayout()
         search_grid.addWidget(self.search_input, 0, 0)
         search_grid.addWidget(self.filter_button, 0, 1)
+        search_grid.addWidget(self.new_entity_button, 0, 2)
         search_grid.addWidget(filter_label, 1, 0, 1, 2)
 
         content_layout = QHBoxLayout(content_frame)
@@ -83,33 +92,77 @@ class EntityController:
         self.main_layout.addWidget(search_frame)
 
     def setup_tab_section(self):
-        """Create the tab widget section"""
+        """Create the tab widget section with close confirmation"""
         tab_frame = QFrame()
         tab_frame.setObjectName("tabFrame")
         tab_frame.setMinimumHeight(150)
 
+        self.tab_widget = QTabWidget()
         self.tab_widget.setObjectName("entityTabWidget")
         self.tab_widget.setFont(QFont("Segoe UI", 10))
         self.tab_widget.setFocusPolicy(Qt.FocusPolicy.TabFocus)
         self.tab_widget.setTabShape(QTabWidget.TabShape.Rounded)
+        self.tab_widget.setTabsClosable(True)
+        self.tab_widget.tabCloseRequested.connect(self.confirm_tab_close)
 
         tab_layout = QVBoxLayout(tab_frame)
         tab_layout.addWidget(self.tab_widget)
 
         self.main_layout.addWidget(tab_frame)
 
-    def setup_styles(self):
+    def confirm_tab_close(self, index):
+        """Show confirmation dialog before closing tab"""
+        tab_name = self.tab_widget.tabText(index)
+
+        dialog = QMessageBox(self.widget)
+        dialog.setWindowTitle("Confirm Deletion")
+        dialog.setIcon(QMessageBox.Question)
+        dialog.setText(f"Delete entity '{tab_name}'?")
+        dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        dialog.setDefaultButton(QMessageBox.No)
+        self.setup_styles(DIALOG_QSS, dialog)
+
+        if dialog.exec() == QMessageBox.Yes:
+            self.remove_tab(index)
+
+    def show_new_entity_dialog(self):
+        """Show dialog for creating new entity"""
+        from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFormLayout
+
+        dialog = QDialog(self.widget)
+        dialog.setWindowTitle("New Entity")
+        dialog.setMinimumWidth(300)
+        self.setup_styles(DIALOG_QSS, dialog)
+
+
+        layout = QFormLayout(dialog)
+
+        # Entity name input
+        name_input = QLineEdit()
+        name_input.setPlaceholderText("Enter entity name")
+        layout.addRow("Name:", name_input)
+
+        # Dialog buttons
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(lambda: self.add_tab(dialog, name_input.text()))
+        buttons.rejected.connect(dialog.reject)
+        self.setup_styles(DIALOG_QSS, buttons)
+        layout.addRow(buttons)
+
+        dialog.exec()
+
+    def setup_styles(self, file_name, widget):
         """Apply consistent styling to all components"""
         # Using pathlib for more reliable path handling
         current_file = Path(__file__).resolve()
         project_root = current_file.parent.parent  # Go up two levels from controllers
         styles_dir = project_root / "styles"
-        qss_file = styles_dir / "entities_page.qss"
+        qss_file = styles_dir / file_name
 
         if qss_file.exists():
             with open(qss_file, "r", encoding="utf-8") as f:
                 style = f.read()
-                self.widget.setStyleSheet(style)
+                widget.setStyleSheet(style)
         else:
             print(f"Stylesheet not found: {qss_file}")
 
@@ -123,12 +176,9 @@ class EntityController:
         self.tab_widget.addTab(widget, title)
 
     def remove_tab(self, index):
-        """Remove a tab by index
-
-        Args:
-            index (int): Index of tab to remove
-        """
+        """Remove tab and perform any cleanup"""
         if 0 <= index < self.tab_widget.count():
+            # Get the widget before removal if you need to clean up resources
             self.tab_widget.removeTab(index)
 
     def clear_tabs(self):
