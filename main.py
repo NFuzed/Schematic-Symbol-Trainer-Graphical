@@ -27,21 +27,21 @@ from widgets import *
 os.environ["QT_FONT_DPI"] = "96" # FIX Problem for High DPI and Scale above 100%
 
 from core import Core
+import cv2
 
 # SET AS GLOBAL WIDGETS
 # ///////////////////////////////////////////////////////////////
-widgets = None
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, core :Core):
         QMainWindow.__init__(self)
 
         # SET AS GLOBAL WIDGETS
         # ///////////////////////////////////////////////////////////////
         self.ui = Ui_MainWindow()
-        self.ui.setupUi(self, Core())
-        global widgets
-        widgets = self.ui
+        self.core = core
+        self.ui.setupUi(self, self.core)
+        self.widgets = self.ui
 
         # USE CUSTOM TITLE BAR | USE AS "False" FOR MAC OR LINUX
         # ///////////////////////////////////////////////////////////////
@@ -53,11 +53,11 @@ class MainWindow(QMainWindow):
         description = "Schematic Symbol Trainer"
         # APPLY TEXTS
         self.setWindowTitle(title)
-        widgets.titleRightInfo.setText(description)
+        self.widgets.titleRightInfo.setText(description)
 
         # TOGGLE MENU
         # ///////////////////////////////////////////////////////////////
-        widgets.toggleButton.clicked.connect(lambda: UIFunctions.toggleMenu(self, True))
+        self.widgets.toggleButton.clicked.connect(lambda: UIFunctions.toggleMenu(self, True))
 
         # SET UI DEFINITIONS
         # ///////////////////////////////////////////////////////////////
@@ -65,33 +65,33 @@ class MainWindow(QMainWindow):
 
         # QTableWidget PARAMETERS
         # ///////////////////////////////////////////////////////////////
-        # widgets.tabWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        # self.widgets.tabWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-        # widgets.lineEdit.text()
+        # self.widgets.lineEdit.text()
 
         # BUTTONS CLICK
         # ///////////////////////////////////////////////////////////////
 
         # LEFT MENUS
-        widgets.page_menu_bar.btn_home.clicked.connect(self.buttonClick)
-        widgets.page_menu_bar.btn_view.clicked.connect(self.buttonClick)
-        widgets.page_menu_bar.btn_entities.clicked.connect(self.buttonClick)
-        widgets.page_menu_bar.btn_new.clicked.connect(self.buttonClick)
-        widgets.page_menu_bar.btn_save.clicked.connect(self.buttonClick)
-        widgets.page_menu_bar.btn_load.clicked.connect(self.buttonClick)
-        # widgets.pushButton.clicked.connect(self.buttonClick)
+        self.widgets.page_menu_bar.btn_home.clicked.connect(self.buttonClick)
+        self.widgets.page_menu_bar.btn_view.clicked.connect(self.buttonClick)
+        self.widgets.page_menu_bar.btn_entities.clicked.connect(self.buttonClick)
+        self.widgets.page_menu_bar.btn_new.clicked.connect(self.buttonClick)
+        self.widgets.page_menu_bar.btn_save.clicked.connect(self.buttonClick)
+        self.widgets.page_menu_bar.btn_load.clicked.connect(self.buttonClick)
+        # self.widgets.pushButton.clicked.connect(self.buttonClick)
 
         # EXTRA LEFT BOX
         def openCloseLeftBox():
             UIFunctions.toggleLeftBox(self, True)
-        widgets.bottom_menu_bar.settings_button.clicked.connect(openCloseLeftBox)
-        widgets.extraLeftBox.close_btn.clicked.connect(openCloseLeftBox)
+        self.widgets.bottom_menu_bar.settings_button.clicked.connect(openCloseLeftBox)
+        self.widgets.extraLeftBox.close_btn.clicked.connect(openCloseLeftBox)
 
         # EXTRA RIGHT BOX
         def openCloseRightBox():
             UIFunctions.toggleRightBox(self, True)
 
-        widgets.windows_control_bar.settings_button.clicked.connect(openCloseRightBox)
+        self.widgets.windows_control_bar.settings_button.clicked.connect(openCloseRightBox)
 
         # SHOW APP
         # ///////////////////////////////////////////////////////////////
@@ -112,8 +112,8 @@ class MainWindow(QMainWindow):
 
         # SET HOME PAGE AND SELECT MENU
         # ///////////////////////////////////////////////////////////////
-        widgets.stackedWidget.setCurrentWidget(widgets.home.widget)
-        widgets.page_menu_bar.btn_home.setStyleSheet(UIFunctions.selectMenu(widgets.page_menu_bar.btn_home.styleSheet()))
+        self.widgets.stackedWidget.setCurrentWidget(self.widgets.home.widget)
+        self.widgets.page_menu_bar.btn_home.setStyleSheet(UIFunctions.selectMenu(self.widgets.page_menu_bar.btn_home.styleSheet()))
 
 
     # BUTTONS CLICK
@@ -126,27 +126,41 @@ class MainWindow(QMainWindow):
 
         # SHOW HOME PAGE
         if btn_name == "btn_home":
-            widgets.stackedWidget.setCurrentWidget(widgets.home.widget)
+            self.widgets.stackedWidget.setCurrentWidget(self.widgets.home.widget)
             UIFunctions.resetStyle(self, btn_name)
             btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet()))
 
         # SHOW WIDGETS PAGE
         if btn_name == "btn_entities":
-            widgets.stackedWidget.setCurrentWidget(widgets.entities.widget)
+            self.widgets.stackedWidget.setCurrentWidget(self.widgets.entities.widget)
             UIFunctions.resetStyle(self, btn_name)
             btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet()))
 
         # SHOW DIAGRAM PAGE
         if btn_name == "btn_view":
-            widgets.stackedWidget.setCurrentWidget(widgets.diagram.widget)
+            self.widgets.stackedWidget.setCurrentWidget(self.widgets.diagram.widget)
             UIFunctions.resetStyle(self, btn_name)
             btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet()))
 
         # SHOW NEW PAGE
         if btn_name == "btn_new":
-            widgets.stackedWidget.setCurrentWidget(widgets.new_page) # SET PAGE
-            UIFunctions.resetStyle(self, btn_name) # RESET ANOTHERS BUTTONS SELECTED
-            btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet())) # SELECT MENU
+            #TODO: revert this
+            # self.widgets.stackedWidget.setCurrentWidget(self.widgets.new_page) # SET PAGE
+            # UIFunctions.resetStyle(self, btn_name) # RESET ANOTHERS BUTTONS SELECTED
+            # btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet())) # SELECT MENU
+
+            file_path, _ = QFileDialog.getOpenFileName(
+                self.ui.stackedWidget,
+                "Open Diagram",
+                "",
+                "Images (*.png *.jpg *.jpeg *.bmp *.gif)"
+            )
+
+            if file_path:
+                self.core.display_results(file_path)
+
+
+
 
         if btn_name == "btn_save":
             print("Save BTN clicked!")
@@ -178,5 +192,6 @@ class MainWindow(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon("icon.ico"))
-    window = MainWindow()
+    core = Core()
+    window = MainWindow(core)
     sys.exit(app.exec())

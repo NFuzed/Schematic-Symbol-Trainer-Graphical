@@ -19,6 +19,7 @@ class EntityDisplayer:
         self.widget.setLineWidth(1)
         self.widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.widget.setFixedSize(220, 220)  # Fixed size for grid alignment
+        self.widget.setStyleSheet("")
 
         layout = QVBoxLayout(self.widget)
         layout.setSpacing(5)

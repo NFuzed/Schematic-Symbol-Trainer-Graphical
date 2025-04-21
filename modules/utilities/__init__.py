@@ -1,1 +1,1 @@
-from . ImageViewer import ImageViewer
+from . image_viewer import ImageViewer

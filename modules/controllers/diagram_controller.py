@@ -96,7 +96,6 @@ class DiagramController:
 
     def handle_snipped_image(self, image):
         """Handle the snipped image (connect your custom logic here)"""
-        # TODO: Fix bug where method is called twice and entities are duplicated
         if not image.isNull() and self.entity_dropdown.itemData(self.entity_dropdown.currentIndex()):
             converted_image = self.q_image_to_numpy(image)
             entity_manager = self.entity_dropdown.itemData(self.entity_dropdown.currentIndex())

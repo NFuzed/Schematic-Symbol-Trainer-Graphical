@@ -246,7 +246,6 @@ class Ui_MainWindow(object):
 
         self.image_viewer = ImageViewer()
         self.diagram = DiagramController(self.image_viewer, core, self.stackedWidget)
-        self.image_viewer.image_snipped.connect(lambda image: self.diagram.handle_snipped_image(image))
 
         self.new_page = QWidget()
         self.new_page.setObjectName(u"new_page")
