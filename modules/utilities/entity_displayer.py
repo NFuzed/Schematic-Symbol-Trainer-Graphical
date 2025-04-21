@@ -6,7 +6,7 @@ from PySide6.QtCore import Qt, Signal
 from src.core import Entity, EntityManager
 import numpy as np
 
-from src.utilities import Observable
+from src.utilities.observable import Observable
 
 
 class EntityDisplayer:

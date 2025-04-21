@@ -17,6 +17,7 @@
 import sys
 import os
 import platform
+import threading
 
 import buttonfunctions
 # IMPORT / GUI AND MODULES AND WIDGETS
@@ -28,6 +29,8 @@ os.environ["QT_FONT_DPI"] = "96" # FIX Problem for High DPI and Scale above 100%
 
 from core import Core
 import cv2
+import threading
+from src.utilities import database_exporter, database_importer
 
 # SET AS GLOBAL WIDGETS
 # ///////////////////////////////////////////////////////////////
@@ -157,13 +160,19 @@ class MainWindow(QMainWindow):
             )
 
             if file_path:
-                self.core.display_results(file_path)
+                thread = threading.Thread(target= lambda: self.core.display_results(file_path))
+                thread.start()
 
 
 
 
         if btn_name == "btn_save":
-            print("Save BTN clicked!")
+            file_path, _ = QFileDialog.getSaveFileName(self.ui.stackedWidget, "Save Database", "", "Model (*.pkl)")
+            database_exporter.export_database(self.core.database, file_path)
+
+        if btn_name == "btn_load":
+            file_path, _ = QFileDialog.getOpenFileName(self.ui.stackedWidget, "Load Database","","Model (*.pkl)")
+            database_importer.import_database(self.core.database, file_path)
 
         buttonFunction = buttonfunctions.BUTTON_FUNCTION_MAP.get(btn_name, None)
         if buttonFunction is not None:
