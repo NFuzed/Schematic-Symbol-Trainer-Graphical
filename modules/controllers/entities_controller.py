@@ -55,7 +55,7 @@ class EntityController:
         """Create the search/filter section at the top"""
         search_frame = QFrame()
         search_frame.setObjectName("searchFrame")
-        search_frame.setMinimumHeight(110)
+        search_frame.setMinimumHeight(150)
         search_frame.setFrameShape(QFrame.Shape.NoFrame)
 
         # Title

@@ -21,7 +21,7 @@ class HomeController:
         left_panel = QVBoxLayout()
 
         # Entity Manager List
-        self.entity_group = QGroupBox("Entities")
+        self.entity_group = QGroupBox("ENTITIES")
         entity_layout = QVBoxLayout()
         self.entity_list = QListWidget()
         entity_layout.addWidget(self.entity_list)
@@ -31,7 +31,7 @@ class HomeController:
         # Placeholder bottom left panel (could be logs, recent actions, diagram preview, etc.)
         self.bottom_left_group = QGroupBox()
         self.bottom_left_group.setMinimumHeight(200)
-        self.bottom_left_group.setTitle("Details / Preview / Logs")
+        self.bottom_left_group.setTitle("LOGS")
         self.bottom_left_group.setLayout(QVBoxLayout())
         left_panel.addWidget(self.bottom_left_group)
 
@@ -47,17 +47,23 @@ class HomeController:
         # Buttons section
         button_grid = QGridLayout()
 
-        self.export_button = QPushButton("EXPORT")
-        self.validate_button = QPushButton("VALIDATE")
-        self.train_button = QPushButton("TRAIN")
-        self.run_button = QPushButton("RUN")
-        self.run_batch_button = QPushButton("RUN BATCH")
+        self.import_button = QPushButton("Import")
+        self.new_button = QPushButton("New")
+        self.analysis_button = QPushButton("Analysis")
+        self.train_button = QPushButton("Train")
+        self.validate_button = QPushButton("Validate")
+        self.run_button = QPushButton("Run")
+        self.run_batch_button = QPushButton("Run Batch")
+        self.export_button = QPushButton("Export")
 
-        button_grid.addWidget(self.export_button, 0, 1)
-        button_grid.addWidget(self.validate_button, 1, 1)
-        button_grid.addWidget(self.train_button, 0, 0)
-        button_grid.addWidget(self.run_button, 1, 0)
-        button_grid.addWidget(self.run_batch_button, 2, 1)
+        button_grid.addWidget(self.new_button, 0, 0, 1, 2)
+        button_grid.addWidget(self.import_button, 0, 2, 1, 2)
+        button_grid.addWidget(self.export_button, 0, 4, 1, 2)
+        button_grid.addWidget(self.train_button, 1, 0, 1, 3)
+        button_grid.addWidget(self.validate_button, 1, 3, 1, 3)
+        button_grid.addWidget(self.run_button, 2, 0, 1, 3)
+        button_grid.addWidget(self.run_batch_button, 2, 3, 1, 3)
+        button_grid.addWidget(self.analysis_button, 3, 0, 1, 6)
 
         right_panel.addLayout(button_grid)
         main_layout.addLayout(right_panel, 3)

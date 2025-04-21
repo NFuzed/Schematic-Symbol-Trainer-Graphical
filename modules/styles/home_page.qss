@@ -2,3 +2,17 @@ QGroupBox::title  {
     font-size: 12pt;
     color: rgb(189, 147, 249);
 }
+
+QGroupBox#MyGroupBox {
+     border: 2px solid rgb(189, 147, 249);
+     border-radius: 3px;
+ }
+
+QPushButton {
+    background-color: rgb(52, 59, 72);
+    border: 1px solid rgb(44, 49, 58);
+    border-radius: 4px;
+    min-width: 150px;
+    min-height: 30px;
+    padding: 5px;
+}

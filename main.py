@@ -100,19 +100,6 @@ class MainWindow(QMainWindow):
         # ///////////////////////////////////////////////////////////////
         self.show()
 
-        # SET CUSTOM THEME
-        # ///////////////////////////////////////////////////////////////
-        useCustomTheme = False
-        themeFile = "themes\\py_dracula_light.qss"
-
-        # SET THEME AND HACKS
-        if useCustomTheme:
-            # LOAD AND APPLY STYLE
-            UIFunctions.theme(self, themeFile, True)
-
-            # SET HACKS
-            AppFunctions.setThemeHack(self)
-
         # SET HOME PAGE AND SELECT MENU
         # ///////////////////////////////////////////////////////////////
         self.widgets.stackedWidget.setCurrentWidget(self.widgets.home.widget)
@@ -168,10 +155,14 @@ class MainWindow(QMainWindow):
 
         if btn_name == "btn_save":
             file_path, _ = QFileDialog.getSaveFileName(self.ui.stackedWidget, "Save Database", "", "Model (*.pkl)")
+            if not file_path:
+                return
             database_exporter.export_database(self.core.database, file_path)
 
         if btn_name == "btn_load":
             file_path, _ = QFileDialog.getOpenFileName(self.ui.stackedWidget, "Load Database","","Model (*.pkl)")
+            if not file_path:
+                return
             database_importer.import_database(self.core.database, file_path)
 
         buttonFunction = buttonfunctions.BUTTON_FUNCTION_MAP.get(btn_name, None)
