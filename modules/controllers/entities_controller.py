@@ -15,6 +15,7 @@ from core import Core
 from src.core import EntityManager
 from ..utilities import *
 from ..utilities.entity_gallery import EntityGallery
+from ..utilities import style_sheet_loader
 
 DIALOG_QSS = "dialog.qss"
 
@@ -35,7 +36,7 @@ class EntityController:
         self.main_layout = QVBoxLayout(self.widget)
 
         self.setup_ui()
-        self.setup_styles("entities_page.qss", self.widget)
+        style_sheet_loader.load_style_sheet("entities_page.qss", self.widget)
         self.register_for_events()
 
     def setup_ui(self):
@@ -137,7 +138,7 @@ class EntityController:
         dialog.setText(f"Delete entity '{tab_name}'?")
         dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         dialog.setDefaultButton(QMessageBox.No)
-        self.setup_styles(DIALOG_QSS, dialog)
+        style_sheet_loader.load_style_sheet(DIALOG_QSS, dialog)
 
         if dialog.exec() == QMessageBox.Yes:
             self.core.database.delete_entity_manager(entity_manager)
@@ -148,7 +149,7 @@ class EntityController:
         dialog = QDialog(self.widget)
         dialog.setWindowTitle("New Entity")
         dialog.setMinimumWidth(300)
-        self.setup_styles(DIALOG_QSS, dialog)
+        style_sheet_loader.load_style_sheet(DIALOG_QSS, dialog)
 
 
         layout = QFormLayout(dialog)
@@ -162,25 +163,11 @@ class EntityController:
         buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         buttons.accepted.connect(lambda: self.add_tab(dialog, name_input.text()))
         buttons.rejected.connect(dialog.reject)
-        self.setup_styles(DIALOG_QSS, buttons)
+        
+        style_sheet_loader.load_style_sheet(DIALOG_QSS, buttons)
         layout.addRow(buttons)
 
         dialog.exec()
-
-    def setup_styles(self, file_name, widget):
-        """Apply consistent styling to all components"""
-        # Using pathlib for more reliable path handling
-        current_file = Path(__file__).resolve()
-        project_root = current_file.parent.parent  # Go up two levels from controllers
-        styles_dir = project_root / "styles"
-        qss_file = styles_dir / file_name
-
-        if qss_file.exists():
-            with open(qss_file, "r", encoding="utf-8") as f:
-                style = f.read()
-                widget.setStyleSheet(style)
-        else:
-            print(f"Stylesheet not found: {qss_file}")
 
     def add_tab(self, widget, entity_name):
         """Add a new tab to the tab widget

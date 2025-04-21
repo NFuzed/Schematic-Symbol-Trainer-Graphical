@@ -42,7 +42,7 @@ class Ui_MainWindow(object):
         font.setBold(False)
         font.setItalic(False)
         self.styleSheet.setFont(font)
-        self.apply_stylesheet(MainWindow)
+        style_sheet_loader.load_style_sheet("main.qss", MainWindow)
         MainWindow.setCentralWidget(self.styleSheet)
 
         self.appMargins = QVBoxLayout(self.styleSheet)
@@ -404,19 +404,6 @@ class Ui_MainWindow(object):
 
 
         QMetaObject.connectSlotsByName(MainWindow)
-
-    # setupUi
-    def apply_stylesheet(self, main_window):
-        """Loads the stylesheet from an external QSS file."""
-        styles_dir = os.path.join(os.path.dirname(__file__), "styles")
-        qss_file = os.path.join(styles_dir, "main.qss")
-
-        if os.path.exists(qss_file):
-            with open(qss_file, "r", encoding="utf-8") as f:
-                qss = f.read()
-                main_window.setStyleSheet(qss)
-        else:
-            print(f"Stylesheet not found: {qss_file}")
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
