@@ -1,184 +1,142 @@
-from PySide6.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsPixmapItem,
-                              QRubberBand, QFileDialog, QVBoxLayout, QHBoxLayout,
-                              QWidget, QPushButton, QComboBox, QLabel, QScrollArea)
-from PySide6.QtGui import QPixmap, QImage, QPainter
-from PySide6.QtCore import Qt, QRect, QPoint, QSize, Signal
+from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
+                               QLineEdit, QLabel, QTabWidget, QFileDialog, QSizePolicy, QGridLayout)
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QPixmap
 from core import Core
-import numpy as np
+from ..utilities import style_sheet_loader, ImageViewer
+from ..utilities.entity_drop_down_selector import EntityDropDownSelector
+from ..utilities import image_numpy_converter
+import os
 
 class DiagramController:
-    def __init__(self, image_viewer, core: Core, parent=None):
-        self.widget = QWidget(parent)
+    def __init__(self, core: Core, parent=None):
         self.core = core
+        self.widget = QWidget(parent)
         parent.addWidget(self.widget)
 
-        # Main components
-        self.image_viewer = image_viewer
-        self.current_image_path = None
+        self.image_path_to_viewer : dict[str, ImageViewer]= {}
+        self.viewer_to_image_path : dict[ImageViewer, str]= {}
+
+        self.tab_widget = QTabWidget()
+        self.add_button = QPushButton("Add Diagram")
+        self.add_batch_button = QPushButton("Add Batch Diagrams")
+        self.remove_diagram = QPushButton("Remove Diagram")
+        self.clear_diagrams = QPushButton("Clear Diagrams")
+
+        self.entity_dropdown = EntityDropDownSelector(core)
 
         self.setup_ui()
         self.setup_connections()
+        style_sheet_loader.load_style_sheet("diagram_page.qss", self.widget)
+
+        self.register_subscriptions()
 
     def setup_ui(self):
-        """Initialize all UI components"""
-        self.main_layout = QVBoxLayout(self.widget)
-        self.main_layout.setContentsMargins(5, 5, 5, 5)
-        self.main_layout.setSpacing(10)
+        self.widget.setObjectName("diagramController")
+        main_layout = QVBoxLayout(self.widget)
 
-        # Control Panel
-        self.setup_control_panel()
+        self.add_button.setObjectName("diagram_buttons")
+        self.add_batch_button.setObjectName("diagram_buttons")
+        self.remove_diagram.setObjectName("diagram_buttons")
+        self.clear_diagrams.setObjectName("diagram_buttons")
 
-        # Image Viewer Area in scroll area
-        scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setWidget(self.image_viewer)
-        self.main_layout.addWidget(scroll_area, 1)
+        title_panel = QHBoxLayout()
+        title_label = QLabel("DIAGRAMS")
+        title_label.setObjectName("title_label")
+        title_panel.addWidget(title_label)
 
-        # Entity Selection
-        self.setup_entity_selection()
-        self.register_for_events()
-
-    def setup_control_panel(self):
-        """Create the control buttons"""
-        control_panel = QWidget()
-        control_layout = QHBoxLayout(control_panel)
-
-        self.load_button = QPushButton("Load Diagram")
-        self.load_button.setObjectName("loadButton")
-        self.load_button.setFixedSize(120, 30)
-
-        self.save_button = QPushButton("Save Selection")
-        self.save_button.setObjectName("saveButton")
-        self.save_button.setFixedSize(120, 30)
-        self.save_button.setEnabled(False)
-
-        control_layout.addWidget(self.load_button)
-        control_layout.addWidget(self.save_button)
-        control_layout.addStretch()
-
-        self.main_layout.addWidget(control_panel)
-
-    def setup_entity_selection(self):
-        """Setup entity selection dropdown"""
-        entity_panel = QWidget()
-        entity_layout = QHBoxLayout(entity_panel)
-
-        self.entity_dropdown = QComboBox()
-        self.entity_dropdown.setObjectName("entityDropdown")
-        self.entity_dropdown.setFixedSize(200, 30)
-        self.entity_dropdown.setEnabled(False)
-
+        # Top section
+        entity_layout = QHBoxLayout()
         entity_layout.addWidget(QLabel("Save as Entity:"))
-        entity_layout.addWidget(self.entity_dropdown)
+        entity_layout.addWidget(self.entity_dropdown.widget)
         entity_layout.addStretch()
 
-        self.main_layout.addWidget(entity_panel)
+        top_panel = QWidget()
+        top_layout = QGridLayout(top_panel)
+        top_layout.setContentsMargins(5, 5, 5, 5)
+
+        entity_widget = QWidget()
+        entity_widget.setLayout(entity_layout)
+        top_layout.addWidget(entity_widget, 1, 0, 1, 4)
+        top_layout.addWidget(self.add_button, 0, 0)
+        top_layout.addWidget(self.add_batch_button, 0, 1)
+        top_layout.addWidget(self.remove_diagram, 0, 2)
+        top_layout.addWidget(self.clear_diagrams, 0, 3)
+
+        # Tab content area
+        self.tab_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        # Add everything to main layout
+        main_layout.addLayout(title_panel)
+        main_layout.addWidget(top_panel)
+        main_layout.addWidget(self.tab_widget)
 
     def setup_connections(self):
-        """Connect signals to slots"""
-        self.load_button.clicked.connect(self.load_diagram)
-        self.save_button.clicked.connect(self.save_selection)
-        self.image_viewer.image_snipped.connect(self.handle_snipped_image)
+        self.add_button.clicked.connect(self.add_diagram)
+        self.add_batch_button.clicked.connect(self.add_batch_diagrams)
+        self.remove_diagram.clicked.connect(self.remove_current_diagram)
+        self.clear_diagrams.clicked.connect(self.clear_all_diagrams)
 
-    def load_diagram(self):
-        """Load an image file into the viewer"""
-        file_path, _ = QFileDialog.getOpenFileName(
-            self.widget,
-            "Open Diagram",
-            "",
-            "Images (*.png *.jpg *.jpeg *.bmp *.gif)"
-        )
+    def remove_current_diagram(self):
+        if isinstance(self.tab_widget.currentWidget(), ImageViewer):
+            image : ImageViewer = self.tab_widget.currentWidget()
+            self.core.database.diagrams.remove_diagram(self.viewer_to_image_path.get(image))
 
-        if file_path and self.image_viewer.load_image(file_path):
-            self.current_image_path = file_path
-            self.save_button.setEnabled(True)
-            self.entity_dropdown.setEnabled(True)
+    def clear_all_diagrams(self):
+        self.core.database.diagrams.clear_diagrams()
+
+    def add_diagram(self):
+        file_path, _ = QFileDialog.getOpenFileName(self.widget, "Select Diagram", "", "Images (*.png *.jpg *.jpeg *.bmp *.gif)")
+        if file_path:
+            self.core.database.diagrams.add_diagram(file_path)
+
+    def add_batch_diagrams(self):
+        folder_path = QFileDialog.getExistingDirectory(self.widget, "Select Folder")
+        if folder_path:
+            import os
+            for f in os.listdir(folder_path):
+                if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
+                    self.core.database.diagrams.add_diagram(os.path.join(folder_path, f))
+
+    def register_subscriptions(self):
+        self.core.database.diagrams.added_diagram_observer.bind(self.create_tab)
+        self.core.database.diagrams.deleted_diagram_observer.bind(self.remove_tab)
+
+    def remove_tab(self, image_file_path):
+        if len(self.core.database.diagrams.diagrams_file_paths) == 0:
+            self.entity_dropdown.widget.setEnabled(False)
+
+        widget = self.image_path_to_viewer.get(image_file_path)
+        if widget is None:
+            return
+
+        index = self.tab_widget.indexOf(widget)
+        if index >= 0:
+            self.tab_widget.removeTab(index)
+
+        self.viewer_to_image_path.pop(widget)
+        self.image_path_to_viewer.pop(image_file_path)
+
+    def create_tab(self, image_file_path):
+        self.entity_dropdown.widget.setEnabled(True)
+
+        if image_file_path in self.image_path_to_viewer:
+            return
+
+        pixmap = QPixmap(image_file_path)
+        if pixmap.isNull():
+            self.core.database.diagrams.remove_diagram(image_file_path)
+            return
+
+        image_viewer = ImageViewer(pixmap, self.tab_widget)
+        image_viewer.image_snipped.connect(self.handle_snipped_image)
+        self.image_path_to_viewer[image_file_path] = image_viewer
+        self.viewer_to_image_path[image_viewer] = image_file_path
+        self.tab_widget.addTab(image_viewer, os.path.basename(image_file_path))
 
     def handle_snipped_image(self, image):
         """Handle the snipped image (connect your custom logic here)"""
-        if not image.isNull() and self.entity_dropdown.itemData(self.entity_dropdown.currentIndex()):
-            converted_image = self.q_image_to_numpy(image)
-            entity_manager = self.entity_dropdown.itemData(self.entity_dropdown.currentIndex())
+        if not image.isNull() and self.entity_dropdown.widget.itemData(self.entity_dropdown.widget.currentIndex()):
+            converted_image = image_numpy_converter.q_image_to_numpy(image)
+            entity_manager = self.entity_dropdown.widget.itemData(self.entity_dropdown.widget.currentIndex())
             entity_manager.create_entity(converted_image)
-
-    def save_selection(self):
-        """Trigger image snipping (handled via the image_snipped signal)"""
-        # May not be required
-        pass
-
-    def set_entities(self, entities):
-        """Populate the entity dropdown"""
-        self.entity_dropdown.clear()
-        self.entity_dropdown.addItems(entities)
-
-    def set_styles(self):
-        """Apply Dracula theme styling"""
-        self.widget.setStyleSheet("""
-            #loadButton, #saveButton {
-                background-color: #44475a;
-                color: #f8f8f2;
-                border: 1px solid #6272a4;
-                border-radius: 4px;
-            }
-            #loadButton:hover, #saveButton:hover {
-                background-color: #6272a4;
-            }
-            #loadButton:pressed, #saveButton:pressed {
-                background-color: #ff79c6;
-                color: #282a36;
-            }
-            #entityDropdown {
-                background-color: #44475a;
-                color: #f8f8f2;
-                border: 1px solid #6272a4;
-                border-radius: 4px;
-                padding: 5px;
-            }
-            QLabel {
-                color: #bd93f9;
-            }
-            QScrollArea {
-                background-color: #282a36;
-                border: 1px solid #44475a;
-            }
-        """)
-
-    def register_for_events(self):
-        """Connect to entity manager changes"""
-        self.core.database.created_entity_manager_observer.bind(self._add_entity_to_dropdown)
-        self.core.database.destroyed_entity_manager_observer.bind(self._remove_entity_from_dropdown)
-
-    def _add_entity_to_dropdown(self, entity_manager):
-        """Add an entity to the dropdown"""
-        self.entity_dropdown.addItem(entity_manager.entity_manager_name, entity_manager)
-
-    def _remove_entity_from_dropdown(self, entity_manager):
-        """Remove an entity from the dropdown"""
-        index = self._find_entity_index(entity_manager)
-        if index >= 0:
-            self.entity_dropdown.removeItem(index)
-
-    def _find_entity_index(self, entity_manager):
-        """Find the combo box index for an entity manager"""
-        for i in range(self.entity_dropdown.count()):
-            if self.entity_dropdown.itemData(i) == entity_manager:
-                return i
-        return -1
-
-    def get_current_entity(self):
-        """Get the currently selected entity manager"""
-        if self.entity_dropdown.currentIndex() >= 0:
-            return self.entity_dropdown.itemData(self.entity_dropdown.currentIndex())
-        return None
-
-    def q_image_to_numpy(self, q_image: QImage):
-        """Convert QImage to numpy array (works in PySide6 6.4+)"""
-        q_image = q_image.convertToFormat(QImage.Format.Format_RGBA8888)
-        buffer = q_image.constBits()
-
-        arr = np.frombuffer(buffer, dtype=np.uint8).reshape(
-            q_image.height(),
-            q_image.width(),
-            4  # RGBA
-        )
-        return arr.copy()

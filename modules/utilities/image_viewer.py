@@ -8,7 +8,7 @@ import numpy as np
 class ImageViewer(QGraphicsView):
     image_snipped = Signal(QImage)  # Signal emitted when image is snipped
 
-    def __init__(self, parent=None):
+    def __init__(self, image : QPixmap, parent=None):
         super().__init__(parent)
         self.scene = QGraphicsScene(self)
         self.setScene(self.scene)
@@ -27,18 +27,13 @@ class ImageViewer(QGraphicsView):
         self.setResizeAnchor(QGraphicsView.AnchorUnderMouse)
         self.setRenderHint(QPainter.Antialiasing)
 
-    def load_image(self, file_path):
-        """Load an image file into the viewer"""
-        self.pixmap = QPixmap(file_path)
-        if self.pixmap.isNull():
-            return False
+        self.pixmap = image
 
         self.scene.clear()
         self.image_item = QGraphicsPixmapItem(self.pixmap)
         self.scene.addItem(self.image_item)
         self.fitInView(self.image_item, Qt.AspectRatioMode.KeepAspectRatio)
         self.scale_factor = 1.0
-        return True
 
     def wheelEvent(self, event):
         """Handle zooming with mouse wheel"""
@@ -76,8 +71,6 @@ class ImageViewer(QGraphicsView):
 
     def emit_snipped_image(self):
         """Convert selection to QImage and emit signal"""
-        print(f"Emitting at {QTime.currentTime().toString('hh:mm:ss.zzz')}")
-
         if self.pixmap and not self.snip_rect.isNull():
             scene_rect = self.mapToScene(self.snip_rect).boundingRect().toRect()
             snipped_image = self.pixmap.copy(scene_rect).toImage()

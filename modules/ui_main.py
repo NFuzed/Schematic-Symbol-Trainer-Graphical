@@ -244,8 +244,7 @@ class Ui_MainWindow(object):
         self.home = HomeController(self.stackedWidget)
         self.entities = EntityController(core, self.stackedWidget)
 
-        self.image_viewer = ImageViewer()
-        self.diagram = DiagramController(self.image_viewer, core, self.stackedWidget)
+        self.diagram = DiagramController(core, self.stackedWidget)
 
         self.new_page = QWidget()
         self.new_page.setObjectName(u"new_page")

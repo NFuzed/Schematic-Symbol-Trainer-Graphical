@@ -19,7 +19,6 @@ import os
 import platform
 import threading
 
-import buttonfunctions
 # IMPORT / GUI AND MODULES AND WIDGETS
 # ///////////////////////////////////////////////////////////////
 from modules import *
@@ -138,20 +137,18 @@ class MainWindow(QMainWindow):
             # self.widgets.stackedWidget.setCurrentWidget(self.widgets.new_page) # SET PAGE
             # UIFunctions.resetStyle(self, btn_name) # RESET ANOTHERS BUTTONS SELECTED
             # btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet())) # SELECT MENU
+            self.core.database.clear_database()
 
-            file_path, _ = QFileDialog.getOpenFileName(
-                self.ui.stackedWidget,
-                "Open Diagram",
-                "",
-                "Images (*.png *.jpg *.jpeg *.bmp *.gif)"
-            )
-
-            if file_path:
-                thread = threading.Thread(target= lambda: self.core.display_results(file_path))
-                thread.start()
-
-
-
+            # file_path, _ = QFileDialog.getOpenFileName(
+            #     self.ui.stackedWidget,
+            #     "Open Diagram",
+            #     "",
+            #     "Images (*.png *.jpg *.jpeg *.bmp *.gif)"
+            # )
+            #
+            # if file_path:
+            #     thread = threading.Thread(target= lambda: self.core.display_results(file_path))
+            #     thread.start()
 
         if btn_name == "btn_save":
             file_path, _ = QFileDialog.getSaveFileName(self.ui.stackedWidget, "Save Database", "", "Model (*.pkl)")
@@ -164,12 +161,6 @@ class MainWindow(QMainWindow):
             if not file_path:
                 return
             database_importer.import_database(self.core.database, file_path)
-
-        buttonFunction = buttonfunctions.BUTTON_FUNCTION_MAP.get(btn_name, None)
-        if buttonFunction is not None:
-            buttonFunction(None)
-        else:
-            print(f'ERROR: "{btn_name}" not found!')
 
     # RESIZE EVENTS
     # ///////////////////////////////////////////////////////////////
