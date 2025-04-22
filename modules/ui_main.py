@@ -335,8 +335,6 @@ class Ui_MainWindow(object):
         self.page_menu_bar.btn_new.setText(QCoreApplication.translate("MainWindow", u"New", None))
         self.page_menu_bar.btn_save.setText(QCoreApplication.translate("MainWindow", u"Save", None))
         self.page_menu_bar.btn_load.setText(QCoreApplication.translate("MainWindow", u"Load", None))
-        self.page_menu_bar.btn_exit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
-        self.bottom_menu_bar.settings_button.setText(QCoreApplication.translate("MainWindow", u"Left Box", None))
         self.extraLeftBox.label.setText(QCoreApplication.translate("MainWindow", u"Left Box", None))
 #if QT_CONFIG(tooltip)
         self.creditsLabel.setText(QCoreApplication.translate("MainWindow", u"By: Furqan Faruqui", None))

@@ -23,9 +23,6 @@ class BottomMenuBar(QFrame):
         self.layout.setObjectName(u"layout")
         self.layout.setContentsMargins(0, 0, 0, 0)
 
-
-        self.settings_button = self.create_toggle_button(u"toggleLeftBox", u"background-image: url(:/icons/images/icons/icon_settings.png);")
-
         self.layout.addWidget(self, 0, Qt.AlignmentFlag.AlignBottom)
 
     def create_toggle_button(self, object_name, image_url):

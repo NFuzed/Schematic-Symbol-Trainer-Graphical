@@ -115,13 +115,6 @@ Extra Tab */
 	background-color: rgb(189, 147, 249)
 }
 
-/* Icon */
-#extraIcon {
-	background-position: center;
-	background-repeat: no-repeat;
-	background-image: url(:/icons/images/icons/icon_settings.png);
-}
-
 /* Label */
 #extraLabel { color: rgb(255, 255, 255); }
 

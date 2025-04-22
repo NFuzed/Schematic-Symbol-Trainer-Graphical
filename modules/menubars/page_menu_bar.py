@@ -29,7 +29,6 @@ class PageMenuBar(QFrame):
         self.btn_new = self.create_page_button(u"btn_new", u"background-image: url(:/icons/images/icons/cil-file.png);")
         self.btn_save = self.create_page_button(u"btn_save", u"background-image: url(:/icons/images/icons/cil-save.png);")
         self.btn_load = self.create_page_button(u"btn_load", u"background-image: url(:/icons/images/icons/cil-description.png)")
-        self.btn_exit = self.create_page_button(u"btn_exit", u"background-image: url(:/icons/images/icons/cil-x.png);")
 
         self.layout.addWidget(self, 0, Qt.AlignmentFlag.AlignTop)
 
