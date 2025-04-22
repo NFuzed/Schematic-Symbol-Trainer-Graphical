@@ -3,7 +3,7 @@ import threading
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
     QLabel, QListWidget, QListWidgetItem, QGroupBox,
-    QScrollArea, QGridLayout, QSizePolicy, QFileDialog
+    QScrollArea, QGridLayout, QSizePolicy, QFileDialog, QDialog
 )
 from PySide6.QtCore import Qt
 
@@ -14,6 +14,7 @@ from ..utilities.entity_row_widget import EntityRow
 from ..utilities.log_panel import LogPanel
 from core import Core
 from ..utilities.model_config_panel import ModelConfigPanel
+from ..utilities.validation_panel import ValidationPanel
 
 
 class HomeController:
@@ -73,21 +74,19 @@ class HomeController:
 
         self.import_button = QPushButton("Import")
         self.generate_dataset_button = QPushButton("Generate Dataset")
-        self.analysis_button = QPushButton("Analysis")
         self.train_button = QPushButton("Train")
         self.validate_button = QPushButton("Validate")
         self.run_button = QPushButton("Run")
         self.run_batch_button = QPushButton("Run Batch")
         self.export_button = QPushButton("Export")
 
-        button_grid.addWidget(self.generate_dataset_button, 0, 0, 1, 2)
-        button_grid.addWidget(self.import_button, 0, 2, 1, 2)
-        button_grid.addWidget(self.export_button, 0, 4, 1, 2)
-        button_grid.addWidget(self.train_button, 1, 0, 1, 3)
-        button_grid.addWidget(self.validate_button, 1, 3, 1, 3)
+        button_grid.addWidget(self.import_button, 0, 0, 1, 3)
+        button_grid.addWidget(self.export_button, 0, 3, 1, 3)
+        button_grid.addWidget(self.generate_dataset_button, 1, 0, 1, 3)
+        button_grid.addWidget(self.train_button, 1, 3, 1, 3)
         button_grid.addWidget(self.run_button, 2, 0, 1, 3)
         button_grid.addWidget(self.run_batch_button, 2, 3, 1, 3)
-        button_grid.addWidget(self.analysis_button, 3, 0, 1, 6)
+        button_grid.addWidget(self.validate_button, 3, 0, 1, 6)
 
         right_panel.addLayout(button_grid)
         main_layout.addLayout(right_panel, 3)
@@ -98,6 +97,7 @@ class HomeController:
         self.generate_dataset_button.clicked.connect(self.generate_dataset)
         self.run_button.clicked.connect(self.run_model)
         self.run_batch_button.clicked.connect(self.run_model_batch)
+        self.validate_button.clicked.connect(self.validate)
 
     def add_entity_manager(self, name: str, count: int):
         item = QListWidgetItem(f"{name}\t{count}")
@@ -206,5 +206,46 @@ class HomeController:
                 if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
                     self.run_model(os.path.join(folder_path, f), export_folder)
 
+    def validate(self):
+        config = self.model_config_panel.get_config()
+
+        file_path, _ = QFileDialog.getOpenFileName(
+            self.widget,
+            "Open Diagram",
+            "",
+            "Images (*.png *.jpg *.jpeg *.bmp *.gif)"
+        )
+
+        detections = self.core.symbol_detector.detect(file_path, config["threshold"])
+
+        self.validation_dialog = QDialog(self.widget)
+        self.validation_dialog.setWindowTitle("Validate Detections")
+        self.validation_dialog.setMinimumSize(800, 600)
+
+        validation_panel = ValidationPanel(self.core, detections, file_path)
+        self.validation_dialog.setLayout(QVBoxLayout())
+        self.validation_dialog.layout().addWidget(validation_panel.widget)
+
+        # Connect apply button
+        validation_panel.apply_button.clicked.connect(lambda: self.apply_feedback(validation_panel))
+        validation_panel.clear_button.clicked.connect(self.validation_dialog.close)
+
+        self.validation_dialog.exec()
+
+    def apply_feedback(self, validation_panel):
+        feedback = validation_panel.get_feedback()
+        for det in feedback["accepted"]:
+            label = det["label"]
+            image = det["image"]  # cropped RGBA numpy array
+
+            # Get entity managers from database
+            managers = self.core.database.get_entity_managers()
+
+            if 1 <= label <= len(managers):
+                manager = managers[label - 1]  # label = 1-based index
+                manager.create_entity(image)
+
+        self.log_panel.write(f"Added {len(feedback['accepted'])} samples to training data.")
+        self.validation_dialog.accept()
 
 
