@@ -53,9 +53,6 @@ class HomeController:
         self.log_panel = LogPanel()
         left_panel.addWidget(self.log_panel.widget)
 
-        for i in range(100):
-            self.log_panel.write("TEST")
-
         main_layout.addLayout(left_panel, 2)
 
         # Right side layout (Model Configuration)

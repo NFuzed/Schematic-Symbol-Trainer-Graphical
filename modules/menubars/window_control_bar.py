@@ -11,7 +11,6 @@ class WindowControlBar(QHBoxLayout):
         self.setObjectName(u"horizontalLayout_2")
         self.setContentsMargins(0, 0, 0, 0)
 
-        self.settings_button = self.create_control_button(u"settings_button", u":/icons/images/icons/icon_settings.png", u"Settings")
         self.minimize_button = self.create_control_button(u"minimizeAppBtn", u":/icons/images/icons/icon_minimize.png", u"Minimize")
         self.maximize_button = self.create_control_button(u"maximizeRestoreAppBtn", u":/icons/images/icons/icon_maximize.png", u"Maximize")
         self.close_button = self.create_control_button(u"closeAppBtn", u":/icons/images/icons/icon_close.png", u"Close")

@@ -326,8 +326,8 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.titleLeftApp.setText(QCoreApplication.translate("MainWindow", u"PyDracula", None))
-        self.titleLeftDescription.setText(QCoreApplication.translate("MainWindow", u"Modern GUI / Flat Style", None))
+        self.titleLeftApp.setText(QCoreApplication.translate("MainWindow", u"Schematic AI", None))
+        self.titleLeftDescription.setText(QCoreApplication.translate("MainWindow", u"AI Diagram Reader", None))
         self.toggleButton.setText(QCoreApplication.translate("MainWindow", u"Hide", None))
         self.page_menu_bar.btn_home.setText(QCoreApplication.translate("MainWindow", u"Home", None))
         self.page_menu_bar.btn_view.setText(QCoreApplication.translate("MainWindow", u"Diagram View", None))

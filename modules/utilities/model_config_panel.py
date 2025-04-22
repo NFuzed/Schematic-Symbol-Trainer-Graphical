@@ -57,10 +57,6 @@ class ModelConfigPanel:
         self.form.addRow("Batch Size:", self.batch_size)
         self.form.addRow("Model Type:", self.model_type)
 
-        # Action button
-        self.train_button = QPushButton("Start Training")
-        self.layout.addWidget(self.train_button)
-
     def get_config(self):
         """Return config as a dictionary"""
         return {
