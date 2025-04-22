@@ -103,9 +103,6 @@ class DiagramController:
         self.core.database.diagrams.deleted_diagram_observer.bind(self.remove_tab)
 
     def remove_tab(self, image_file_path):
-        if len(self.core.database.diagrams.diagrams_file_paths) == 0:
-            self.entity_dropdown.widget.setEnabled(False)
-
         widget = self.image_path_to_viewer.get(image_file_path)
         if widget is None:
             return
@@ -118,8 +115,6 @@ class DiagramController:
         self.image_path_to_viewer.pop(image_file_path)
 
     def create_tab(self, image_file_path):
-        self.entity_dropdown.widget.setEnabled(True)
-
         if image_file_path in self.image_path_to_viewer:
             return
 

@@ -7,7 +7,6 @@ class EntityDropDownSelector:
         self.widget = QComboBox()
         self.widget.setObjectName("entityDropdown")
         self.widget.setFixedSize(200, 30)
-        self.widget.setEnabled(False)
 
         self.register_for_events()
 
