@@ -97,6 +97,7 @@ class HomeController:
         self.import_button.clicked.connect(self.import_model)
         self.generate_dataset_button.clicked.connect(self.generate_dataset)
         self.run_button.clicked.connect(self.run_model)
+        self.run_batch_button.clicked.connect(self.run_model_batch)
 
     def add_entity_manager(self, name: str, count: int):
         item = QListWidgetItem(f"{name}\t{count}")
@@ -113,6 +114,7 @@ class HomeController:
     def register_subscribers(self):
         self.core.database.created_entity_manager_observer.bind(self.create_entity_row)
         self.core.database.destroyed_entity_manager_observer.bind(self.delete_entity_row)
+        self.core.symbol_detector.update_logger_observer.bind(self.log_panel.write)
 
     def create_entity_row(self, entity_manager: EntityManager):
         row = EntityRow(entity_manager)
@@ -171,20 +173,38 @@ class HomeController:
             self.core.symbol_detector.load_model(num_classes=num_classes, path=path)
             self.log_panel.write(f"Model loaded from {path}")
 
-    def run_model(self):
+    def run_model(self, file_path=None, folder=None):
         config = self.model_config_panel.get_config()
 
-        file_path, _ = QFileDialog.getOpenFileName(
-            self.widget,
-            "Open Diagram",
-            "",
-            "Images (*.png *.jpg *.jpeg *.bmp *.gif)"
-        )
+        if not file_path:
+            file_path, _ = QFileDialog.getOpenFileName(
+                self.widget,
+                "Open Diagram",
+                "",
+                "Images (*.png *.jpg *.jpeg *.bmp *.gif)"
+            )
 
-        folder = QFileDialog.getExistingDirectory(self.widget, "Select Export Folder")
         if not folder:
-            return
+            folder = QFileDialog.getExistingDirectory(self.widget, "Select Export Folder")
+            if not folder:
+                return
 
         if file_path:
             thread = threading.Thread(target= lambda: self.core.symbol_detector.detect(file_path, config["threshold"], export_folder=folder))
             thread.start()
+
+    def run_model_batch(self):
+
+        export_folder = QFileDialog.getExistingDirectory(self.widget, "Select Export Folder")
+        if not export_folder:
+            return
+
+        folder_path = QFileDialog.getExistingDirectory(self.widget, "Select Folder")
+        if folder_path:
+            import os
+            for f in os.listdir(folder_path):
+                if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
+                    self.run_model(os.path.join(folder_path, f), export_folder)
+
+
+
