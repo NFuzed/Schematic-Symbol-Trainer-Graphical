@@ -123,17 +123,6 @@ class MainWindow(QMainWindow):
         if btn_name == "btn_new":
             self.core.database.clear_database()
 
-            # file_path, _ = QFileDialog.getOpenFileName(
-            #     self.ui.stackedWidget,
-            #     "Open Diagram",
-            #     "",
-            #     "Images (*.png *.jpg *.jpeg *.bmp *.gif)"
-            # )
-            #
-            # if file_path:
-            #     thread = threading.Thread(target= lambda: self.core.display_results(file_path))
-            #     thread.start()
-
         if btn_name == "btn_save":
             file_path, _ = QFileDialog.getSaveFileName(self.ui.stackedWidget, "Save Database", "", "Model (*.pkl)")
             if not file_path:

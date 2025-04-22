@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
 import os
 from pathlib import Path
 from core import Core
-from src.core import EntityManager
+from src.core.entity_manager import EntityManager
 from ..utilities import *
 from ..utilities.entity_gallery import EntityGallery
 from ..utilities import style_sheet_loader

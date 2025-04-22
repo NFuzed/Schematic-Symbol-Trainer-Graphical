@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget, QLabel, QHBoxLayout
 from PySide6.QtCore import Qt
-from src.core import EntityManager
+from src.core.entity_manager import EntityManager
 
 class EntityRow:
     def __init__(self, entity_manager: EntityManager):

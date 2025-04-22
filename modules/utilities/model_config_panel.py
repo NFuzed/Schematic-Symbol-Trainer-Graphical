@@ -42,8 +42,10 @@ class ModelConfigPanel:
         self.batch_size.setRange(1, 64)
         self.batch_size.setValue(4)
 
-        self.model_type = QComboBox()
-        self.model_type.addItems(["Faster R-CNN", "RetinaNet"])
+        self.threshold = QDoubleSpinBox()
+        self.threshold.setDecimals(2)
+        self.threshold.setSingleStep(0.01)
+        self.threshold.setValue(0.7)
 
         # Add fields to form
         self.form.addRow("Data Mode:", self.data_mode)
@@ -55,7 +57,7 @@ class ModelConfigPanel:
         self.form.addRow("Epochs:", self.epochs)
         self.form.addRow("Learning Rate:", self.learning_rate)
         self.form.addRow("Batch Size:", self.batch_size)
-        self.form.addRow("Model Type:", self.model_type)
+        self.form.addRow("Model Type:", self.threshold)
 
     def get_config(self):
         """Return config as a dictionary"""
@@ -69,5 +71,5 @@ class ModelConfigPanel:
             "epochs": self.epochs.value(),
             "learning_rate": self.learning_rate.value(),
             "batch_size": self.batch_size.value(),
-            "model_type": self.model_type.currentText(),
+            "threshold": self.threshold.value(),
         }

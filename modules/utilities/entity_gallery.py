@@ -4,7 +4,8 @@ from PySide6.QtGui import QPixmap, QImage
 from PySide6.QtCore import Qt, Signal, QSize
 
 from modules.utilities.entity_displayer import EntityDisplayer
-from src.core import Entity, EntityManager
+from src.core.entity import Entity
+from src.core.entity_manager import EntityManager
 
 class EntityGallery:
     """Container widget that displays entities in a wrapping grid"""

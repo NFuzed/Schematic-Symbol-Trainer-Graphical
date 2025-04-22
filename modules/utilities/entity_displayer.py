@@ -3,7 +3,8 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
 from PySide6.QtGui import QPixmap, QImage
 from PySide6.QtCore import Qt, Signal
 
-from src.core import Entity, EntityManager
+from src.core.entity import Entity
+from src.core.entity_manager import EntityManager
 import numpy as np
 
 from src.utilities.observable import Observable
