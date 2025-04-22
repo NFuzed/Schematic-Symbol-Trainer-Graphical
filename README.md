@@ -1,77 +1,93 @@
-# PyDracula - Modern GUI PySide6 / PyQt6
+# Schematic Symbol Trainer
 # 
 
-> ## :gift: **//// DONATE ////**
-> ## 🔗 Donate (Gumroad): https://gum.co/mHsRC
-> This interface is free for any use, but if you are going to use it commercially, consider helping to maintain this project and others with a donation by Gumroado at the link above. This helps to keep this and other projects active.
+A desktop application designed to train, validate, and improve object detection models for detecting reusable schematic symbols (like electrical components, technical shapes, etc.) from scanned or digital diagrams.
 
-> **Warning**: this project was created using PySide6 and Python 3.9, using previous versions can cause compatibility problems.
+This tool offers a full pipeline from collecting symbol samples, training a model, validating detection results, and exporting usable models or datasets.
 
-# YouTube - Presentation And Tutorial
-Presentation and tutorial video with the main functions of the user interface.
-> 🔗 https://youtu.be/9DnaHg4M_AM
+# Features
 
-# Multiple Themes
-![PyDracula_Default_Dark](https://user-images.githubusercontent.com/60605512/112993874-0b647700-9140-11eb-8670-61322d70dbe3.png)
-![PyDracula_Light](https://user-images.githubusercontent.com/60605512/112993918-18816600-9140-11eb-837c-e7a7c3d2b05e.png)
+* Add and manage reusable symbols via entity managers
+* Load single or multiple diagrams
+* Create synthetic datasets from entity examples
+* Full control over model configuration (e.g. image size, epochs, learning rate)
+* Train and validate object detection models
+* Visual symbol approval/rejection to refine training
+* Export trained model (.pth) and detection results (image + CSV)
 
-# High DPI
-> Qt Widgets is an old technology and does not have a good support for high DPI settings, making these images look distorted when your system has DPI applied above 100%.
-You can minimize this problem using a workaround by applying this code below in "main.py" just below the import of the Qt modules.
-```python
-# ADJUST QT FONT DPI FOR HIGHT SCALE
-# ///////////////////////////////////////////////////////////////
-from modules import *
-from widgets import *
-os.environ["QT_FONT_DPI"] = "96"
+# Getting Started
+## Requirements
+* Python 3.10+
+* PySide6
+* OpenCV
+* PyTorch
+* Torchvision
+* NumPy
+
+Install with:
+
+```console
+pip install -r requirements.txt
 ```
 
-# Running
-> Inside your preferred terminal run the commands below depending on your system, remembering before installing Python 3.9> and PySide6 "pip install PySide6".
-> ## **Windows**:
+Launch the app:
+
 ```console
 python main.py
 ```
-> ## **MacOS and Linux**:
-```console
-python3 main.py
-```
-# Compiling
-> ## **Windows**:
-```console
-python setup.py build
-```
 
-# Project Files And Folders
-> **main.py**: application initialization file.
+# The Home Page
+![img.png](images/images/img.png)
 
-> **main.ui**: Qt Designer project.
+When you first launch the application, you are met with the home page. This controls everything to do with manipulating
+the model and provided a overview of the registered entities that have been parsed. At the start the section is no too useful
+and the user should move to the entities page. It is easier to locate after selecting the burger bar at the top.
 
-> **resouces.qrc**: Qt Designer resoucers, add here your resources using Qt Designer. Use version 6 >
+# The Entities Table
+![img_1.png](images/images/img_1.png)
+Here the user has can create new instances of symbol types to find in diagrams. This is done through selecting "new entity"
+and the tab should get added as an option on the widget. The entity manager can also be removed by selecting the cross on 
+the tab.
 
-> **setup.py**: cx-Freeze setup to compile your application (configured for Windows).
+# The Diagram Page
+![img_2.png](images/images/img_2.png)
+Here the user can load diagrams to extract entities to better define what the model should look for. To do this, select the 
+"Add Diagram" option and select and image of a diagram. Then using the scroll and mouse for panning on the image, locate the
+entity to extract. To extract the entity and add it to the entities section, hold right click to draw a square *WHILE* the 
+"Save as Entity" combo box is displaying the entity type to store it as.
 
-> **themes/**: add here your themes (.qss).
+![img_4.png](images/images/img_4.png)
 
-> **modules/**: module for running PyDracula GUI.
+This is what a populated entity table looks like.
 
-> **modules/app_funtions.py**: add your application's functions here.
-Up
-> **modules/app_settings.py**: global variables to configure user interface.
+The remaining options in the diagrams page are:
+* Add Batch Diagrams - Select a folder to import all images that exist in the directory
+* Remove Diagram - Removed the currently selected diagrams
+* Clear Diagrams - Removes all diagrams from the tab widget
 
-> **modules/resources_rc.py**: "resource.qrc" file compiled for python using the command: ```pyside6-rcc resources.qrc -o resources_rc.py```.
+After all symbols have been parsed, the home page will be a bit more populated.
 
-> **modules/ui_functions.py**: add here only functions related to the user interface / GUI.
+![img_5.png](images/images/img_5.png)
 
-> **modules/ui_main.py**: file related to the user interface exported by Qt Designer. You can compile it manually using the command: ```pyside6-uic main.ui> ui_main.py ```.
-After expoting in .py and change the line "import resources_rc" to "from. Resoucers_rc import *" to use as a module.
+At this point, the user is ready to create and train a model! To start, confirm you are happy with the configuration of the 
+Data Mode, Sample / Class, Image Size and the points to augment symbols to run against.
+Next generate the dataset. This will use the entities in the managers to create augmented data to train against as the dataset
+size will always be small.
 
-> **images/**: put all your images and icons here before converting to Python (resources_re.py) ```pyside6-rcc resources.qrc -o resources_rc.py```.
+Once the dataset has been generated, the model can be trained and the configuration is modified by the final four optionals
+in the tab. The progress is dynamically output in the logs section. 
 
-# Projects Created Using PyDracula
-**See the projects that were created using PyDracula.**
-> To participate create a "Issue" with the name beginning with "#pydracula_project", leaving the link of your project on Github, name of the creator and what is its functionality. Your project will be added and this list will be deleted from "Issue".
-**Malicious programs will not be added**!
+At this point the user can select run / run batch to detect entities inside an image / images and after selecting the diagram to 
+process, the results are exported as an image and a csv with the detections found above the threshold.
+
+![img_6.png](images/images/img_6.png)
+An example where the dataset was small (about 17 images) and results.
+
+# Importing and Exporting
+
+The software has been designed to import and export the database and the created model. Samples have been provided
+for this single diagram for initial testing.
+
 
 
 
