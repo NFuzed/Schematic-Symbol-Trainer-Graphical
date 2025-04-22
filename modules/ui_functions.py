@@ -87,64 +87,6 @@ class UIFunctions(MainWindow):
             self.animation.setEasingCurve(QEasingCurve.InOutQuart)
             self.animation.start()
 
-    # TOGGLE LEFT BOX
-    # ///////////////////////////////////////////////////////////////
-    def toggleLeftBox(self, enable):
-        if enable:
-            # GET WIDTH
-            width = self.ui.extraLeftBox.widget.width()
-            widthRightBox = self.ui.extraRightBox.width()
-            maxExtend = Settings.LEFT_BOX_WIDTH
-            color = Settings.BTN_LEFT_BOX_COLOR
-            standard = 0
-
-            # GET BTN STYLE
-            style = self.ui.bottom_menu_bar.settings_button.styleSheet()
-
-            # SET MAX WIDTH
-            if width == 0:
-                widthExtended = maxExtend
-                # SELECT BTN
-                self.ui.bottom_menu_bar.settings_button.setStyleSheet(style + color)
-                if widthRightBox != 0:
-                    style = self.ui.windows_control_bar.settings_button.styleSheet()
-                    self.ui.windows_control_bar.settings_button.setStyleSheet(style.replace(Settings.BTN_RIGHT_BOX_COLOR, ''))
-            else:
-                widthExtended = standard
-                # RESET BTN
-                self.ui.bottom_menu_bar.settings_button.setStyleSheet(style.replace(color, ''))
-                
-        UIFunctions.start_box_animation(self, width, widthRightBox, "left")
-
-    # TOGGLE RIGHT BOX
-    # ///////////////////////////////////////////////////////////////
-    def toggleRightBox(self, enable):
-        if enable:
-            # GET WIDTH
-            width = self.ui.extraRightBox.width()
-            widthLeftBox = self.ui.extraLeftBox.width()
-            maxExtend = Settings.RIGHT_BOX_WIDTH
-            color = Settings.BTN_RIGHT_BOX_COLOR
-            standard = 0
-
-            # GET BTN STYLE
-            style = self.ui.windows_control_bar.settings_button.styleSheet()
-
-            # SET MAX WIDTH
-            if width == 0:
-                widthExtended = maxExtend
-                # SELECT BTN
-                self.ui.windows_control_bar.settings_button.setStyleSheet(style + color)
-                if widthLeftBox != 0:
-                    style = self.ui.bottom_menu_bar.settings_button.styleSheet()
-                    self.ui.bottom_menu_bar.settings_button.setStyleSheet(style.replace(Settings.BTN_LEFT_BOX_COLOR, ''))
-            else:
-                widthExtended = standard
-                # RESET BTN
-                self.ui.windows_control_bar.settings_button.setStyleSheet(style.replace(color, ''))
-
-            UIFunctions.start_box_animation(self, widthLeftBox, width, "right")
-
     def start_box_animation(self, left_box_width, right_box_width, direction):
         right_width = 0
         left_width = 0 

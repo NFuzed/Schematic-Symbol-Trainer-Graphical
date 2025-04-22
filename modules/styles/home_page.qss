@@ -16,3 +16,73 @@ QPushButton {
     min-height: 30px;
     padding: 5px;
 }
+
+QTextEdit {
+    background-color: rgb(33, 37, 43);
+    color: rgb(248, 248, 242);
+    border: none;
+}
+
+QSpinBox, QDoubleSpinBox {
+    background-color: rgb(44, 49, 58);
+    color: rgb(248, 248, 242);
+    border: 1px solid rgb(68, 71, 90);
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+QSpinBox::up-button,
+QSpinBox::down-button,
+QDoubleSpinBox::up-button,
+QDoubleSpinBox::down-button {
+    width: 16px;
+    border: none;
+    background-color: rgb(68, 71, 90);
+}
+
+QSpinBox::up-button:hover,
+QSpinBox::down-button:hover,
+QDoubleSpinBox::up-button:hover,
+QDoubleSpinBox::down-button:hover {
+    background-color: rgb(189, 147, 249);
+}
+
+QDoubleSpinBox::up-arrow,
+QDoubleSpinBox::down-arrow {
+    width: 10px;
+    height: 10px;
+}
+
+QComboBox {
+    background-color: rgb(44, 49, 58);
+    color: rgb(248, 248, 242);
+    border: 1px solid rgb(68, 71, 90);
+    border-radius: 4px;
+    padding: 4px 8px;
+    padding-left: 10px;
+}
+
+QComboBox:hover {
+    border: 1px solid rgb(189, 147, 249);
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border-left: 1px solid rgb(68, 71, 90);
+    background-color: rgb(68, 71, 90);
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background-image: url(:/icons/images/icons/cil-arrow-bottom.png);
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+QComboBox QAbstractItemView {
+    background-color: rgb(33, 37, 43);
+    border: 1px solid rgb(68, 71, 90);
+    selection-background-color: rgb(68, 71, 90);
+    color: rgb(248, 248, 242);
+    padding: 4px;
+}

@@ -4,12 +4,22 @@ from PySide6.QtWidgets import (
     QScrollArea, QGridLayout, QSizePolicy
 )
 from PySide6.QtCore import Qt
+
+from src.core import EntityManager
 from ..utilities import style_sheet_loader
+from ..utilities.entity_row_widget import EntityRow
+from ..utilities.log_panel import LogPanel
+from core import Core
+from ..utilities.model_config_panel import ModelConfigPanel
+
 
 class HomeController:
-    def __init__(self, parent=None):
+    def __init__(self, core : Core, parent=None):
+        self.core = core
+        self.manager_to_widget_row : dict[EntityManager, EntityRow] = {}
         self.widget = QWidget(parent)
         self.setup_ui()
+        self.register_subscribers()
         parent.addWidget(self.widget)
 
     def setup_ui(self):
@@ -20,20 +30,31 @@ class HomeController:
         # Left side layout (Entity managers + optional bottom panel)
         left_panel = QVBoxLayout()
 
-        # Entity Manager List
+        # Entity Manager List Section
         self.entity_group = QGroupBox("ENTITIES")
-        entity_layout = QVBoxLayout()
-        self.entity_list = QListWidget()
-        entity_layout.addWidget(self.entity_list)
-        self.entity_group.setLayout(entity_layout)
+        entity_group_layout = QVBoxLayout()
+
+        # Scrollable container for entity rows
+        self.entity_scroll_container = QWidget()
+        self.entity_scroll_layout = QVBoxLayout(self.entity_scroll_container)
+        self.entity_scroll_layout.setContentsMargins(5, 5, 5, 5)
+        self.entity_scroll_layout.setSpacing(6)
+
+        # Scroll area wrapping the container
+        self.entity_scroll_area = QScrollArea()
+        self.entity_scroll_area.setWidgetResizable(True)
+        self.entity_scroll_area.setWidget(self.entity_scroll_container)
+
+        entity_group_layout.addWidget(self.entity_scroll_area)
+        self.entity_group.setLayout(entity_group_layout)
         left_panel.addWidget(self.entity_group)
 
         # Placeholder bottom left panel (could be logs, recent actions, diagram preview, etc.)
-        self.bottom_left_group = QGroupBox()
-        self.bottom_left_group.setMinimumHeight(200)
-        self.bottom_left_group.setTitle("LOGS")
-        self.bottom_left_group.setLayout(QVBoxLayout())
-        left_panel.addWidget(self.bottom_left_group)
+        self.log_panel = LogPanel()
+        left_panel.addWidget(self.log_panel.widget)
+
+        for i in range(100):
+            self.log_panel.write("TEST")
 
         main_layout.addLayout(left_panel, 2)
 
@@ -43,6 +64,8 @@ class HomeController:
         config_layout = QVBoxLayout()
         self.config_group.setLayout(config_layout)
         right_panel.addWidget(self.config_group, stretch=1)
+        self.model_config_panel = ModelConfigPanel()
+        config_layout.addWidget(self.model_config_panel.widget)
 
         # Buttons section
         button_grid = QGridLayout()
@@ -79,3 +102,18 @@ class HomeController:
             if child.widget():
                 child.widget().deleteLater()
         layout.addWidget(widget)
+
+    def register_subscribers(self):
+        self.core.database.created_entity_manager_observer.bind(self.create_entity_row)
+        self.core.database.destroyed_entity_manager_observer.bind(self.delete_entity_row)
+
+    def create_entity_row(self, entity_manager : EntityManager):
+        row = EntityRow(entity_manager)
+        self.entity_scroll_layout.addWidget(row.widget)
+        self.manager_to_widget_row[entity_manager] = row
+
+    def delete_entity_row(self, entity_manager : EntityManager):
+        if entity_manager in self.manager_to_widget_row:
+            entity_row = self.manager_to_widget_row[entity_manager]
+            entity_row.widget.deleteLater()
+            self.manager_to_widget_row.pop(entity_manager)

@@ -83,18 +83,6 @@ class MainWindow(QMainWindow):
         self.widgets.page_menu_bar.btn_load.clicked.connect(self.buttonClick)
         # self.widgets.pushButton.clicked.connect(self.buttonClick)
 
-        # EXTRA LEFT BOX
-        def openCloseLeftBox():
-            UIFunctions.toggleLeftBox(self, True)
-        self.widgets.bottom_menu_bar.settings_button.clicked.connect(openCloseLeftBox)
-        self.widgets.extraLeftBox.close_btn.clicked.connect(openCloseLeftBox)
-
-        # EXTRA RIGHT BOX
-        def openCloseRightBox():
-            UIFunctions.toggleRightBox(self, True)
-
-        self.widgets.windows_control_bar.settings_button.clicked.connect(openCloseRightBox)
-
         # SHOW APP
         # ///////////////////////////////////////////////////////////////
         self.show()
@@ -133,10 +121,6 @@ class MainWindow(QMainWindow):
 
         # SHOW NEW PAGE
         if btn_name == "btn_new":
-            #TODO: revert this
-            # self.widgets.stackedWidget.setCurrentWidget(self.widgets.new_page) # SET PAGE
-            # UIFunctions.resetStyle(self, btn_name) # RESET ANOTHERS BUTTONS SELECTED
-            # btn.setStyleSheet(UIFunctions.selectMenu(btn.styleSheet())) # SELECT MENU
             self.core.database.clear_database()
 
             # file_path, _ = QFileDialog.getOpenFileName(

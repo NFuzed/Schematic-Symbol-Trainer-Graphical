@@ -1,1 +1,0 @@
-from . entity_image_panel import EntityImagePanel
