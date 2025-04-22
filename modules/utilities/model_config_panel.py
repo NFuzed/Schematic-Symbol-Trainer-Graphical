@@ -57,7 +57,7 @@ class ModelConfigPanel:
         self.form.addRow("Epochs:", self.epochs)
         self.form.addRow("Learning Rate:", self.learning_rate)
         self.form.addRow("Batch Size:", self.batch_size)
-        self.form.addRow("Model Type:", self.threshold)
+        self.form.addRow("Threshold:", self.threshold)
 
     def get_config(self):
         """Return config as a dictionary"""
